@@ -185,7 +185,7 @@ class Sensor: ObservableObject, Logging {
 
     var type: SensorType = .unknown
     var family: SensorFamily = .libre
-    var region: Int = 0
+    var region: SensorRegion = .unknown
     var serial: String = ""
     var readerSerial: Data = Data()
 
@@ -210,7 +210,7 @@ class Sensor: ObservableObject, Logging {
                 type = .unknown
             }
             if info.count > 3 {
-                region = Int(info[3])
+                region = SensorRegion(rawValue: Int(info[3])) ?? .unknown
             }
             if info.count >= 6 {
                 family = SensorFamily(rawValue: Int(info[2] >> 4)) ?? .libre
@@ -350,7 +350,7 @@ class Sensor: ObservableObject, Logging {
         guard fram.count >= 344 else { return }
 
         // fram[322...323] (footer[2..3]) corresponds to patchInfo[2...3]
-        region = Int(fram[323])
+        region = SensorRegion(rawValue: Int(fram[323])) ?? .unknown
         maxLife = Int(fram[326]) + Int(fram[327]) << 8
         DispatchQueue.main.async {
             self.main?.settings.activeSensorMaxLife = self.maxLife
@@ -402,7 +402,7 @@ class Sensor: ObservableObject, Logging {
         if initializations > 0 {
             log("Sensor initializations: \(initializations)")
         }
-        log("Sensor region: \(SensorRegion(rawValue: region)?.description ?? "unknown")\(region != 0 ? " (0x\(region.hex))" : "")")
+        log("Sensor region: \(region.description)\(region.rawValue != 0 ? " (\(region.rawValue.hex))" : "")")
         if maxLife > 0 {
             log("Sensor maximum life: \(maxLife) minutes (\(maxLife.formattedInterval))")
         }

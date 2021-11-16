@@ -131,7 +131,7 @@ struct Details: View {
 
                         Row("Reader serial", app.sensor.readerSerial.count >= 16 ? app.sensor.readerSerial[...13].string : "")
 
-                        Row("Region", SensorRegion(rawValue: app.sensor.region)?.description ?? "unknown")
+                        Row("Region", app.sensor.region.description)
 
                         if app.sensor.maxLife > 0 {
                             Row("Maximum Life", app.sensor.maxLife.formattedInterval)

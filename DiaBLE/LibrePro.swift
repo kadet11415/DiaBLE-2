@@ -162,7 +162,7 @@ class LibrePro: Sensor {
         // Libre Pro: fram[42...43] (footer[2..3]) corresponds to patchInfo[2...3]
 
         // TODO: with a Libre Pro footer[2...3] = 1000 family = 1 but region = 00 ???
-        region = Int(fram[43])
+        region = SensorRegion(rawValue: Int(fram[43])) ?? .unknown
 
         maxLife = Int(fram[46]) + Int(fram[47]) << 8   // footer[6...7]
         DispatchQueue.main.async {
@@ -217,7 +217,7 @@ class LibrePro: Sensor {
         //            log("Sensor initializations: \(initializations)")
         //        }
 
-        log("Sensor region: \(SensorRegion(rawValue: region)?.description ?? "unknown")\(region != 0 ? " (0x\(region.hex))" : "")")
+        log("Sensor region: \(region.description)\(region.rawValue != 0 ? " (\(region.rawValue.hex))" : "")")
         if maxLife > 0 {
             log("Sensor maximum life: \(maxLife) minutes (\(maxLife.formattedInterval))")
         }
