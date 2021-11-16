@@ -60,11 +60,13 @@ struct Console: View {
                         Text(log.text)
                             .frame(maxWidth: .infinity, alignment: .topLeading)
                             .padding(4)
+                            .textSelection(.enabled)
                     } else {
                         Text(log.text.split(separator: "\n").filter({$0.lowercased().contains(filterString.lowercased()
                         )}).joined(separator: ("\n \n")) + "\n")
                             .frame(maxWidth: .infinity, alignment: .topLeading)
                             .padding(4)
+                            .textSelection(.enabled)
                     }
                 }
                 .font(.system(.footnote, design: .monospaced)).foregroundColor(colorScheme == .dark ? Color(.lightGray) : Color(.darkGray))
