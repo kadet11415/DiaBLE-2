@@ -402,7 +402,7 @@ class Sensor: ObservableObject, Logging {
         if initializations > 0 {
             log("Sensor initializations: \(initializations)")
         }
-        log("Sensor region: \(region.description)\(region.rawValue != 0 ? " (\(region.rawValue.hex))" : "")")
+        log("Sensor region: \(region.description) (\(fram[323].hex)")
         if maxLife > 0 {
             log("Sensor maximum life: \(maxLife) minutes (\(maxLife.formattedInterval))")
         }

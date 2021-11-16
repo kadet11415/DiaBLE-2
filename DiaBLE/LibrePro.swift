@@ -217,7 +217,7 @@ class LibrePro: Sensor {
         //            log("Sensor initializations: \(initializations)")
         //        }
 
-        log("Sensor region: \(region.description)\(region.rawValue != 0 ? " (\(region.rawValue.hex))" : "")")
+        log("Sensor region: \(region.description) (\(fram[43]))")
         if maxLife > 0 {
             log("Sensor maximum life: \(maxLife) minutes (\(maxLife.formattedInterval))")
         }
