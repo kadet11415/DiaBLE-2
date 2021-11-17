@@ -39,6 +39,11 @@ import Foundation
 // sram:   0x1C00, 4096
 //
 // 0xD8F8: 14-char reader serial + 2 bytes to append to the activation command
+//
+// 0xD998 ..< 0xF918: history data (6 * 4 * 24 * 14 bytes)
+//
+// 0xFFB8 ..< 0xFFD0: AB AB patch table for the 9 custom commands A0 A1 A2 A4 A3 ?? E0 E1 E2
+
 
 
 class LibrePro: Sensor {
@@ -217,7 +222,7 @@ class LibrePro: Sensor {
         //            log("Sensor initializations: \(initializations)")
         //        }
 
-        log("Sensor region: \(region.description) (\(fram[43]))")
+        log("Sensor region: \(region.description) (\(fram[43].hex))")
         if maxLife > 0 {
             log("Sensor maximum life: \(maxLife) minutes (\(maxLife.formattedInterval))")
         }

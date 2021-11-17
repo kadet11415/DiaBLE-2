@@ -41,8 +41,8 @@ struct Console: View {
                     Text(log.text)
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 } else {
-                    Text(log.text.split(separator: "\n").filter({$0.lowercased().contains(filterString.lowercased()
-                    )}).joined(separator: ("\n \n")) + "\n")
+                    let pattern = filterString.lowercased()
+                    Text(log.text.split(separator: "\n").filter({$0.lowercased().contains(pattern)}).joined(separator: ("\n \n")))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
             }
