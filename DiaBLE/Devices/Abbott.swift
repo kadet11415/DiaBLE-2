@@ -33,11 +33,16 @@ class Abbott: Transmitter {
 
         case libre3unknownService = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
-        /// After writing the very first command: 0x11, notifies  the two bytes 08 17
+        /// After writing the very first command, 0x11, notifies the two bytes 08 17
+        /// then 22CE notifies 20 + 5 bytes: 20 + 5 - 2 = 23 (0x17)!
+        /// After writing the second command:, 0x08, notifies the two bytes 08 43
+        /// then 22CE notifies 20 + 20 + 20 + 11 bytes: 71 - 4 = 67 (0x43)!
         case libre3unknown0x2198  = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
-        /// After notifying the very first data made of 20 + 5 bytes, three packets of 20 + 20 + 6 bytes
-        /// starting with 00 00, 12 00, 24 00 are written
+        /// After notifying the very first data made of 20 + 5 bytes (security challenge?), three packets
+        /// of 20 + 20 + 6 bytes starting with 00 00, 12 00, 24 00 are written (streaming unlock payload?)
+        /// after the second command 08 has ben written to 0x2198
+        /// Notifies then 20 + 20 + 20 + 11 bytes (session info?)
         case libre3unknown0x22CE  = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         case libre3unknown0x23FA  = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
