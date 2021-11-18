@@ -28,7 +28,10 @@ class Abbott: Transmitter {
         /// Notifies a second longer stream of 20-byte packets of past data
         case libre3data0x1AB8     = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
+        /// Notifies 20 + 20 bytes towards the end of activation (session info?)
         case libre3data0x1BEE     = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+
+        /// Notifies the final stream of 20-byte packets during activation
         case libre3data0x1D24     = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         case libre3unknownService = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
@@ -45,6 +48,7 @@ class Abbott: Transmitter {
         /// Notifies then 20 + 20 + 20 + 11 bytes (session info?)
         case libre3unknown0x22CE  = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
+        /// Writes and notifies 20-byte packets during activation
         case libre3unknown0x23FA  = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         var description: String {
@@ -69,7 +73,7 @@ class Abbott: Transmitter {
     }
 
 
-    // Libre 3:
+    // Libre 3 connection	:
     // enable notifications for 2198, 23FA and 22CE
     // write  2198  11
     // notify 2198  08 17
@@ -87,7 +91,40 @@ class Abbott: Transmitter {
     // notify 1338  10 bytes
     // write  1338  13 bytes
     // notify 1AB8  20-byte packets of past data
-    // notify 1338  10 bytes
+    // notify 1338  10 byte
+
+    // Libre 3 activation:
+    // enable notifications for 2198, 23FA and 22CE
+    // write  2198  01
+    // write  2198  02
+    // write  23FA  20 * 9 bytes starting with 00 00, 12 00, 24 00, ... [first: 0000 0300 0102 0304 0506 0708 090A 0B0C 0D0E 0F10]
+    // write  2198  03
+    // notify 2198  04
+    // write  2198  09
+    // notify 2108  A0 8C
+    // notify 23FA  20 * 7 + 8 bytes starting with 00, 01, ...
+    // write  2198  0D
+    // write  23FA  20 * 3 + 13 bytes starting with 00 00, 12 00, 24 00, ...
+    // write  2198  0E
+    // notify 2198  0F 41
+    // notify 23FA  20 * 3 + 9 bytes with 00, 01, 02, ...
+    // write  2198  11
+    // notify 2198  08 17
+    // notify 22CE  20 + 5 bytes starting with 00 00, 01 00
+    // write  22CE  20 *2 + 6 bytes starting with 00 00, 12 00, 24 00
+    // notify 2198  08
+    // notify 2198  08 43
+    // notify 22CE  20 * 3 + 11 bytes starting with 00, 01, 02, 03
+    // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
+    // notify 1482  18 bytes
+    // enable notifications for 177A
+    // write  1338  13 bytes 0-ending
+    // notify 1BBE  20 + 20 bytes
+    // notify 1338  10 bytes 0-ending
+    // write  1338  13 bytes
+    // notify 1D24  20 * 10 + 15 bytes
+    // notify 1338  10 bytes 0-ending
+
 
     override class var knownUUIDs: [String] { UUID.allCases.map{$0.rawValue} }
 
