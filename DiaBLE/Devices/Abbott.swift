@@ -22,30 +22,35 @@ class Abbott: Transmitter {
         /// Notifies every minute 35 bytes as two packets of 15 + 20 zero-terminated bytes
         case libre3data0x177A     = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        /// Notifies a first stream of 20-byte packets of past data while the curve is drawn on display
+        /// Notifies a first stream of recent data while the curve is drawn on display
         case libre3data0x195A     = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        /// Notifies a second longer stream of 20-byte packets of past data
+        /// Notifies a second longer stream of past data
         case libre3data0x1AB8     = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies 20 + 20 bytes towards the end of activation (session info?)
         case libre3data0x1BEE     = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        /// Notifies the final stream of 20-byte packets during activation
+        /// Notifies the final stream of data during activation
         case libre3data0x1D24     = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         case libre3unknownService = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
-        /// After writing the very first command, 0x11, notifies the two bytes 08 17
-        /// then 22CE notifies 20 + 5 bytes: 20 + 5 - 2 = 23 (0x17)!
-        /// After writing the second command:, 0x08, notifies the two bytes 08 43
-        /// then 22CE notifies 20 + 20 + 20 + 11 bytes: 71 - 4 = 67 (0x43)!
+        /// Writes a single byte command, may notifiy in the second byte the effective length of a stripped stream
+        /// 01: very first command when activating a sensor
+        /// 02: written immediately after 01
+        /// 03: third command sent during activation
+        /// 04: notified immediately after 03
+        /// 08: read the final 67-byte session info -> notifies 08 43 + prefixes
+        /// 09: during activation notifies A0 8C -> 23FA notifies 140  bytes + prefixes
+        /// 0d: during activation
+        /// 0e: notifies 0F 41 -> 23FA notifies 69 bytes
+        /// 11: read the 23-byte security challenge, notifies 08 17
         case libre3unknown0x2198  = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
-        /// After notifying the very first data made of 20 + 5 bytes (security challenge?), three packets
-        /// of 20 + 20 + 6 bytes starting with 00 00, 12 00, 24 00 are written (streaming unlock payload?)
-        /// after the second command 08 has ben written to 0x2198
-        /// Notifies then 20 + 20 + 20 + 11 bytes (session info?)
+        /// Notifies the 23-byte security challenge + prefixes
+        /// Writes the 40-byte unlock payload + prefixes
+        /// Notifies the 67-byte session info + prefixes
         case libre3unknown0x22CE  = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Writes and notifies 20-byte packets during activation
@@ -73,57 +78,62 @@ class Abbott: Transmitter {
     }
 
 
-    // Libre 3 connection	:
+    // Libre 3 connection:
     // enable notifications for 2198, 23FA and 22CE
     // write  2198  11
     // notify 2198  08 17
-    // notify 22CE  20 + 5 bytes
-    // write  22CE  20 + 20 + 6 bytes
+    // notify 22CE  20 + 5 bytes        // 23-byte challenge
+    // write  22CE  20 + 20 + 6 bytes   // 40-byte unlock payload
     // write  2198  08
     // notify 2198  08 43
-    // notify 22CE  20 + 20 + 20 + 11 bytes
+    // notify 22CE  20 * 3 + 11 bytes   // 67-byte session info
     // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
     // notify 1482  18 bytes
     // enable notifications for 177A
     // write  1338  13 bytes
     // notify 177A  15 + 20 bytes
-    // notify 195A  20-byte packets of past data
+    // notify 195A  20-byte packets of recent data
     // notify 1338  10 bytes
     // write  1338  13 bytes
     // notify 1AB8  20-byte packets of past data
     // notify 1338  10 byte
 
+
     // Libre 3 activation:
+    //
+    // notified packets are prefixed by 00, 01, 02, ...
+    // written packets are prefixed by 00 00, 12 00, 24 00, 36 00, ...
+    //
     // enable notifications for 2198, 23FA and 22CE
     // write  2198  01
     // write  2198  02
-    // write  23FA  20 * 9 bytes starting with 00 00, 12 00, 24 00, ... [first: 0000 0300 0102 0304 0506 0708 090A 0B0C 0D0E 0F10]
+    // write  23FA  20 * 9 bytes (first packet: 0000 0300 0102 0304 0506 0708 090A 0B0C 0D0E 0F10)
     // write  2198  03
     // notify 2198  04
     // write  2198  09
-    // notify 2108  A0 8C
-    // notify 23FA  20 * 7 + 8 bytes starting with 00, 01, ...
+    // notify 2198  A0 8C
+    // notify 23FA  20 * 7 + 8 bytes
     // write  2198  0D
-    // write  23FA  20 * 3 + 13 bytes starting with 00 00, 12 00, 24 00, ...
+    // write  23FA  20 * 3 + 13 bytes
     // write  2198  0E
     // notify 2198  0F 41
-    // notify 23FA  20 * 3 + 9 bytes with 00, 01, 02, ...
+    // notify 23FA  20 * 3 + 9 bytes
     // write  2198  11
     // notify 2198  08 17
-    // notify 22CE  20 + 5 bytes starting with 00 00, 01 00
-    // write  22CE  20 *2 + 6 bytes starting with 00 00, 12 00, 24 00
-    // notify 2198  08
+    // notify 22CE  20 + 5 bytes        // 23-byte challenge
+    // write  22CE  20 * 2 + 6 bytes    // 40-byte unlock payload
+    // write  2198  08
     // notify 2198  08 43
-    // notify 22CE  20 * 3 + 11 bytes starting with 00, 01, 02, 03
+    // notify 22CE  20 * 3 + 11 bytes   // 67-byte session info
     // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
     // notify 1482  18 bytes
     // enable notifications for 177A
-    // write  1338  13 bytes 0-ending
+    // write  1338  13 bytes (final 0)
     // notify 1BBE  20 + 20 bytes
-    // notify 1338  10 bytes 0-ending
+    // notify 1338  10 bytes (final 0)
     // write  1338  13 bytes
     // notify 1D24  20 * 10 + 15 bytes
-    // notify 1338  10 bytes 0-ending
+    // notify 1338  10 bytes (final 0)
 
 
     override class var knownUUIDs: [String] { UUID.allCases.map{$0.rawValue} }
