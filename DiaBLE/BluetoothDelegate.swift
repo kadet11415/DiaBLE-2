@@ -318,12 +318,12 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         // TODO: Libre 3
 
         if serviceUUID == Libre3.UUID.unknown1.rawValue {
-            log("Bluetooth: Libre 3 security challenge 0x11")
+            log("Bluetooth: sending Libre 3 security challenge 0x11")
             app.device.write(Data([0x11]), for: Libre3.UUID._2198.rawValue, .withResponse)
         }
 
 
-        if app.device.type == .transmitter(.abbott) && serviceUUID == Abbott.dataServiceUUID {
+        if app.device.type == .transmitter(.abbott) && (serviceUUID == Abbott.dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue || serviceUUID == Libre3.UUID.unknown1.rawValue) {
             var sensor: Sensor! = app.sensor
             if app.sensor == nil {
                 if serviceUUID == Libre3.UUID.data.rawValue {
@@ -347,6 +347,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                         switch family {
                         case 7:  sensor.type = .libreSense
                         case 3:  sensor.type = .libre2
+                        case 0:  sensor.type = .libre3
                         default: sensor.type = .libre2
                         // TODO: .libre2US / .libre2CA
                         }
@@ -367,7 +368,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             }
             app.device.macAddress = settings.activeSensorAddress
 
-            if (app.transmitter as! Abbott).securityGeneration > 1 && (app.transmitter as! Abbott).authenticationState == .notAuthenticated {
+            if (app.transmitter as! Abbott).securityGeneration == 2 && (app.transmitter as! Abbott).authenticationState == .notAuthenticated {
                 app.device.peripheral?.setNotifyValue(true, for: app.device.writeCharacteristic!)
                 (app.transmitter as! Abbott).authenticationState = .enableNotification
                 debugLog("Bluetooth: enabled \(app.device.name) security notification")

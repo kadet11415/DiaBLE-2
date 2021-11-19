@@ -146,21 +146,24 @@ class Libre3: Libre2 {
         switch UUID(rawValue: uuid) {
 
 
+        case ._2198:
+            if data.count == 2 {
+                log("\(type) \(device.peripheral!.name!): will receive \(data[1]) bytes")
+            }
+
         case ._22CE:
             if buffer.count == 0 {
                 buffer = Data(data)
             } else if buffer.count == 20 {
                 buffer += data
                 if buffer.count == 25 {
-                    log("Libre 3: received first data (\(buffer.count) bytes):\n\(buffer.hexDump())")
+                    log("\(type) \(device.peripheral!.name!): received first data (\(buffer.count) bytes):\n\(buffer.hexDump())")
                     buffer = Data()
-                    log("Libre 3: test sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
+                    log("\(type) \(device.peripheral!.name!): test sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
                     device.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                     device.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                     device.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
 
-                    // TODO:
-                    // writing 00 24 00 00 00 00 causes the error `The value's length is invalid`...
 
                     // FIXME: writing 08 on 0x2198 makes the Libre 3 disconnect
                     // log("Libre 3: test writing the second command 0x08 on 0x2198")
