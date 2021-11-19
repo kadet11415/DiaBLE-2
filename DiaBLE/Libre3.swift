@@ -3,7 +3,7 @@ import Foundation
 
 class Libre3: Sensor {
 
-    // TODO: https://github.com/gui-dos/DiaBLE/discussions/7
+    // TODO: https://github.com/gui-dos/DiaBLE/discussions/7 - "Libre 3 NFC"
 
     func parsePatchInfo() {
         if patchInfo.count == 28 {

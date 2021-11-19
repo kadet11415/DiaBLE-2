@@ -41,7 +41,7 @@ class Abbott: Transmitter {
         /// 02: written immediately after 01
         /// 03: third command sent during activation
         /// 04: notified immediately after 03
-        /// 08: read the final 67-byte session info -> notifies 08 43 + prefixes
+        /// 08: read the final 67-byte session info, notifies 08 43 -> 22CE notifies 67 bytes + prefixes
         /// 09: during activation notifies A0 8C -> 23FA notifies 140  bytes + prefixes
         /// 0d: during activation
         /// 0e: notifies 0F 41 -> 23FA notifies 69 bytes
