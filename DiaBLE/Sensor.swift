@@ -402,10 +402,15 @@ class Sensor: ObservableObject, Logging {
         if initializations > 0 {
             log("Sensor initializations: \(initializations)")
         }
-        log("Sensor region: \(region.description) (\(fram[323].hex)")
+
+        if fram.count >= 344 {
+            log("Sensor region: \(region.description) (\(fram[323].hex)")
+        }
+
         if maxLife > 0 {
             log("Sensor maximum life: \(maxLife) minutes (\(maxLife.formattedInterval))")
         }
+
         if age > 0 {
             log("Sensor age: \(age) minutes (\(age.formattedInterval)), started on: \((lastReadingDate - Double(age) * 60).shortDateTime)")
         }

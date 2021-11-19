@@ -222,10 +222,14 @@ class LibrePro: Sensor {
         //            log("Sensor initializations: \(initializations)")
         //        }
 
-        log("Sensor region: \(region.description) (\(fram[43].hex))")
+        if fram.count >= 72 {
+            log("Sensor region: \(region.description) (\(fram[43].hex))")
+        }
+
         if maxLife > 0 {
             log("Sensor maximum life: \(maxLife) minutes (\(maxLife.formattedInterval))")
         }
+
         if age > 0 {
             log("Sensor age: \(age) minutes (\(age.formattedInterval)), started on: \((lastReadingDate - Double(age) * 60).shortDateTime)")
         }
