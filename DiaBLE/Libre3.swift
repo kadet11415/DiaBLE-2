@@ -6,30 +6,30 @@ class Libre3: Libre2 {
 
     enum UUID: String, CustomStringConvertible, CaseIterable {
 
-        case libre3data           = "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
+        case data =      "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Requests past data by writing 13 zero-terminated bytes, notifies 10 zero-terminated bytes at the end of stream
-        case _1338     = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case data_1338 = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
-        case _1482     = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
+        case data_1482 = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
 
         /// Notifies every minute 35 bytes as two packets of 15 + 20 zero-terminated bytes
-        case _177A     = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case data_177A = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies a first stream of recent data while the curve is drawn on display
-        case _195A     = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case data_195A = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies a second longer stream of past data
-        case _1AB8     = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case data_1AB8 = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies 20 + 20 bytes towards the end of activation (session info?)
-        case _1BEE     = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case data_1BEE = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies the final stream of data during activation
-        case _1D24     = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case data_1D24 = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        case libre3unknownService = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
+        case unknown1 = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Writes a single byte command, may notify in the second byte the effective length of a stripped stream
         /// 01: very first command when activating a sensor
@@ -41,30 +41,30 @@ class Libre3: Libre2 {
         /// 0d: during activation is written before 0d
         /// 0e: during activation notifies 0F 41 -> 23FA notifies 69 bytes
         /// 11: read the 23-byte security challenge, notifies 08 17
-        case _2198  = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case _2198 = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Notifies the 23-byte security challenge + prefixes
         /// Writes the 40-byte unlock payload + prefixes
         /// Notifies the 67-byte session info + prefixes
-        case _22CE  = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case _22CE = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Writes and notifies 20-byte packets during activation
-        case _23FA  = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case _23FA = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         var description: String {
             switch self {
-            case .libre3data:           return "Libre 3 data service"
-            case ._1338:     return "Libre 3 data 0x1338"
-            case ._1482:     return "Libre 3 data 0x1482"
-            case ._177A:     return "Libre 3 data 0x177A"
-            case ._195A:     return "Libre 3 data 0x195A"
-            case ._1AB8:     return "Libre 3 data 0x1AB8"
-            case ._1BEE:     return "Libre 3 data 0x1BEE"
-            case ._1D24:     return "Libre 3 data 0x1D24"
-            case .libre3unknownService: return "Libre 3 unknown service"
-            case ._2198:  return "Libre 3 unknown 0x2198"
-            case ._22CE:  return "Libre 3 unknown 0x22CE"
-            case ._23FA:  return "Libre 3 unknown 0x23FA"
+            case .data:      return "Libre 3 data service"
+            case .data_1338: return "Libre 3 data 0x1338"
+            case .data_1482: return "Libre 3 data 0x1482"
+            case .data_177A: return "Libre 3 data 0x177A"
+            case .data_195A: return "Libre 3 data 0x195A"
+            case .data_1AB8: return "Libre 3 data 0x1AB8"
+            case .data_1BEE: return "Libre 3 data 0x1BEE"
+            case .data_1D24: return "Libre 3 data 0x1D24"
+            case .unknown1:  return "Libre 3 unknown service"
+            case ._2198:     return "Libre 3 unknown 0x2198"
+            case ._22CE:     return "Libre 3 unknown 0x22CE"
+            case ._23FA:     return "Libre 3 unknown 0x23FA"
             }
         }
     }

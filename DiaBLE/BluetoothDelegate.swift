@@ -40,7 +40,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         let manufacturerData = advertisement[CBAdvertisementDataManufacturerDataKey] as? Data
         let dataServiceUUIDs = advertisement[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID]
 
-        if let dataServiceUUIDs = dataServiceUUIDs, dataServiceUUIDs.count > 0, dataServiceUUIDs[0].uuidString == Libre3.UUID.libre3data.rawValue {
+        if let dataServiceUUIDs = dataServiceUUIDs, dataServiceUUIDs.count > 0, dataServiceUUIDs[0].uuidString == Libre3.UUID.data.rawValue {
             name = "ABBOTT\(name ?? "unnamedLibre")"    // Libre 3 device name is 12 chars long
         }
 
@@ -216,7 +216,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                     description = "data service"
                 }
                 // TODO
-                if serviceUUID == Libre3.UUID.libre3data.rawValue {
+                if serviceUUID == Libre3.UUID.data.rawValue {
                     description = "data service"
                 }
                 if let uuid = BLE.UUID(rawValue: serviceUUID) {
@@ -240,7 +240,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
         let serviceUUID = service.uuid.uuidString
         var serviceDescription = serviceUUID
-        if serviceUUID == type(of: app.device).dataServiceUUID || serviceUUID == Libre3.UUID.libre3data.rawValue {
+        if serviceUUID == type(of: app.device).dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue {
             serviceDescription = "data"
         }
 
@@ -250,7 +250,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             var msg = "Bluetooth: discovered \(app.device.name) \(serviceDescription) service's characteristic \(uuid)"
             msg += (", properties: \(characteristic.properties)")
 
-            if uuid == Libre3.UUID._1482.rawValue {
+            if uuid == Libre3.UUID.data_1482.rawValue {
                 msg += " (Libre 3 data read); avoid enabling notifications because of 'Encryption is insufficient' error"
 
 
@@ -317,8 +317,8 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
         // TODO: Libre 3
 
-        if serviceUUID == Libre3.UUID.libre3unknownService.rawValue {
-            log("Bluetooth: sending the very first Libre 3 BLE command: 0x11")
+        if serviceUUID == Libre3.UUID.unknown1.rawValue {
+            log("Bluetooth: Libre 3 security challenge 0x11")
             app.device.write(Data([0x11]), for: Libre3.UUID._2198.rawValue, .withResponse)
         }
 
@@ -326,7 +326,11 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         if app.device.type == .transmitter(.abbott) && serviceUUID == Abbott.dataServiceUUID {
             var sensor: Sensor! = app.sensor
             if app.sensor == nil {
-                sensor = Libre2(transmitter: app.transmitter)
+                if serviceUUID == Libre3.UUID.data.rawValue {
+                    sensor = Libre3(transmitter: app.transmitter)
+                } else {
+                    sensor = Libre2(transmitter: app.transmitter)
+                }
                 app.sensor = sensor
                 sensor.state = .active
                 sensor.uid = (app.device as! Abbott).sensorUid
