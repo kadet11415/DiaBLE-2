@@ -250,7 +250,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             var msg = "Bluetooth: discovered \(app.device.name) \(serviceDescription) service's characteristic \(uuid)"
             msg += (", properties: \(characteristic.properties)")
 
-            if uuid == Libre3.UUID.libre3data0x1482.rawValue {
+            if uuid == Libre3.UUID._1482.rawValue {
                 msg += " (Libre 3 data read); avoid enabling notifications because of 'Encryption is insufficient' error"
 
 
@@ -319,7 +319,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
         if serviceUUID == Libre3.UUID.libre3unknownService.rawValue {
             log("Bluetooth: sending the very first Libre 3 BLE command: 0x11")
-            app.device.write(Data([0x11]), for: Libre3.UUID.libre3unknown0x2198.rawValue, .withResponse)
+            app.device.write(Data([0x11]), for: Libre3.UUID._2198.rawValue, .withResponse)
         }
 
 
