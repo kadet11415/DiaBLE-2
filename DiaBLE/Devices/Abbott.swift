@@ -78,7 +78,13 @@ class Abbott: Transmitter {
     }
 
 
-    // Libre 3 connection:
+    // Libre 3:
+    //
+    // maximum packet size is 20
+    // notified packets are prefixed by 00, 01, 02, ...
+    // written packets are prefixed by 00 00, 12 00, 24 00, 36 00, ...
+    //
+    // new connection:
     // enable notifications for 2198, 23FA and 22CE
     // write  2198  11
     // notify 2198  08 17
@@ -97,13 +103,8 @@ class Abbott: Transmitter {
     // write  1338  13 bytes
     // notify 1AB8  20-byte packets of past data
     // notify 1338  10 byte
-
-
-    // Libre 3 activation:
     //
-    // notified packets are prefixed by 00, 01, 02, ...
-    // written packets are prefixed by 00 00, 12 00, 24 00, 36 00, ...
-    //
+    // activation:
     // enable notifications for 2198, 23FA and 22CE
     // write  2198  01
     // write  2198  02

@@ -296,6 +296,8 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
             } else {
                 let sensorType = SensorType(patchInfo: patchInfo)
                 switch sensorType {
+                case .libre3:
+                    sensor = Libre3(main: main)
                 case .libre2:
                     sensor = Libre2(main: main)
                 case .libreProH:
@@ -354,6 +356,11 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
                     self.main.settings.patchUid = self.sensor.uid
                     self.main.settings.patchInfo = self.sensor.patchInfo
                 }
+            }
+
+            // TODO: Libre 3
+            if let sensor = sensor as? Libre3 {
+                sensor.parsePatchInfo()
             }
 
             log("NFC: sensor serial number: \(sensor.serial)")
