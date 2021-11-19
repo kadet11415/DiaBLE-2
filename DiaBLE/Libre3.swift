@@ -148,7 +148,7 @@ class Libre3: Libre2 {
 
         case ._2198:
             if data.count == 2 {
-                log("\(type) \(device.peripheral!.name!): will receive \(data[1]) bytes")
+                log("\(type) \(device.peripheral!.name!): will receive \(data[1]) + \(data[1] / 20 + 1) bytes")
             }
 
         case ._22CE:
@@ -157,9 +157,9 @@ class Libre3: Libre2 {
             } else if buffer.count == 20 {
                 buffer += data
                 if buffer.count == 25 {
-                    log("\(type) \(device.peripheral!.name!): received first data (\(buffer.count) bytes):\n\(buffer.hexDump())")
+                    log("\(type) \(device.peripheral!.name!): received (\(buffer.count) bytes):\n\(buffer.hexDump())")
                     buffer = Data()
-                    log("\(type) \(device.peripheral!.name!): test sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
+                    log("\(type) \(device.peripheral!.name!): TEST: sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
                     device.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                     device.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                     device.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
