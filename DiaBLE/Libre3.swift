@@ -154,7 +154,7 @@ class Libre3: Libre2 {
 
     func parsePatchInfo() {
         if patchInfo.count == 28 {
-            log("Libre 3: patch info CRC: \(patchInfo.suffix(2).hex), computed CRC: \(patchInfo.prefix(26).crc16.hex)")
+            log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(patchInfo.suffix(2).hex), computed CRC: \(patchInfo.prefix(26).crc16.hex)")
             log("Libre 3: state: \(patchInfo[16])")
         }
     }

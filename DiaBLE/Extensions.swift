@@ -5,6 +5,7 @@ import CryptoKit
 extension Data {
     var hex: String { self.reduce("", { $0 + String(format: "%02x", $1)}) }
     var string: String { String(decoding: self, as: UTF8.self) }
+    var hexBytes: String { String(self.reduce("", { $0 + $1.hex + " "}).dropLast(1)) }
     var hexAddress: String { String(self.reduce("", { $0 + $1.hex + ":"}).dropLast(1)) }
     var sha1: String { Insecure.SHA1.hash(data: self).makeIterator().reduce("", { $0 + String(format: "%02x", $1)}) }
 
