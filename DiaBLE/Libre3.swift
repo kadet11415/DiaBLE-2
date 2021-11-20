@@ -6,6 +6,7 @@ class Libre3: Libre2 {
 
     enum UUID: String, CustomStringConvertible, CaseIterable {
 
+        /// Advertised primary data service
         case data =      "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Requests past data by writing 13 zero-terminated bytes, notifies 10 zero-terminated bytes at the end of stream
@@ -29,17 +30,18 @@ class Libre3: Libre2 {
         /// Notifies the final stream of data during activation
         case data_1D24 = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        case unknown1 = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
+        /// Secondary service
+        case unknown1 =  "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
-        /// Writes a single byte command, may notify in the second byte the effective length of a stripped stream
+        /// Writes a single byte command, may notify in the second byte the effective length of the returned stripped stream
         /// 01: very first command when activating a sensor
         /// 02: written immediately after 01
         /// 03: third command sent during activation
         /// 04: notified immediately after 03
         /// 08: read the final 67-byte session info, notifies 08 43 -> 22CE notifies 67 bytes + prefixes
         /// 09: during activation notifies A0 8C -> 23FA notifies 140 bytes + prefixes
-        /// 0d: during activation is written before 0d
-        /// 0e: during activation notifies 0F 41 -> 23FA notifies 69 bytes
+        /// 0D: during activation is written before 0E
+        /// 0E: during activation notifies 0F 41 -> 23FA notifies 69 bytes
         /// 11: read the 23-byte security challenge, notifies 08 17
         case _2198 = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
@@ -127,6 +129,24 @@ class Libre3: Libre2 {
     // notify 1338  10 bytes (final 0)
 
 
+    /// Single byte command written to 0x2198
+    enum Command: UInt8, CustomStringConvertible {
+
+        /// final command to get a 67-byte session info
+        case getSessionInfo  = 0x08
+
+        /// first command sent when reconnecting
+        case readChallenge   = 0x11
+
+        var description: String {
+            switch self {
+            case .getSessionInfo: return "get session info"
+            case .readChallenge:  return "read security challenge"
+            }
+        }
+    }
+
+
     var buffer: Data = Data()
 
 
@@ -145,7 +165,6 @@ class Libre3: Libre2 {
 
         switch UUID(rawValue: uuid) {
 
-
         case ._2198:
             if data.count == 2 {
                 log("\(type) \(device.peripheral!.name!): will receive \(data[1]) + \(data[1] / 20 + 1) bytes")
@@ -154,20 +173,26 @@ class Libre3: Libre2 {
         case ._22CE:
             if buffer.count == 0 {
                 buffer = Data(data)
+
             } else if buffer.count == 20 {
                 buffer += data
                 if buffer.count == 25 {
-                    log("\(type) \(device.peripheral!.name!): received (\(buffer.count) bytes):\n\(buffer.hexDump())")
+
+                    // TODO: split the 20-byte packets and the leading progressive prefixes
+
+                    log("\(type) \(device.peripheral!.name!): received \(buffer.count) bytes :\n\(buffer.hexDump())")
                     buffer = Data()
+
                     log("\(type) \(device.peripheral!.name!): TEST: sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
                     device.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                     device.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                     device.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
 
 
-                    // FIXME: writing 08 on 0x2198 makes the Libre 3 disconnect
-                    // log("Libre 3: test writing the second command 0x08 on 0x2198")
-                    // write(Data([0x08]), for: Abbott.UUID.libre3unknown0x2198.rawValue, .withResponse)
+                    // writing .getSessionInfo makes the Libre 3 disconnect
+                    let cmd = Libre3.Command.getSessionInfo
+                    log("Bluetooth: sending Libre 3 `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
+                    device.write(Data([cmd.rawValue]), for: Libre3.UUID._2198.rawValue, .withResponse)
                 }
             }
 
