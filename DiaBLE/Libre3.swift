@@ -195,7 +195,7 @@ class Libre3: Libre2 {
         case ._2198:
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
-                log("\(type) \(transmitter!.peripheral!.name!): will receive \(expectedStreamSize) bytes")
+                log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes")
             }
 
         case ._22CE:
@@ -216,15 +216,15 @@ class Libre3: Libre2 {
                         expectedStreamSize = 0
                         currentCommand = nil
 
-                        log("\(type) \(transmitter!.peripheral!.name!): TEST: sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
+                        // TODO: write(command:)
+
+                        log("\(type) \(transmitter!.peripheral!.name!): TEST: sending to 0x22CE zeroed packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
                         transmitter!.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                         transmitter!.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                         transmitter!.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
 
                         // writing .getSessionInfo makes the Libre 3 disconnect
-                        let cmd = Libre3.Command.getSessionInfo
-                        log("Bluetooth: sending Libre 3 `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
-                        transmitter!.write(Data([cmd.rawValue]), for: Libre3.UUID._2198.rawValue, .withResponse)
+                        send(command: .getSessionInfo)
                     }
 
                 default:
