@@ -148,6 +148,8 @@ class Libre3: Libre2 {
 
 
     var buffer: Data = Data()
+    var currentCommand: Command?
+    var expectedStreamSize = 0
 
 
     // TODO: https://github.com/gui-dos/DiaBLE/discussions/7 - "Libre 3 NFC"
@@ -160,6 +162,25 @@ class Libre3: Libre2 {
     }
 
 
+    func parsePackets(_ data: Data) -> (Data, String) {
+        var payload = Data()
+        var str = ""
+        var offset = data.startIndex
+        var offsetEnd = offset
+        let endIndex = data.endIndex
+        while offset < endIndex {
+            str += data[offset].hex + "  "
+            _ = data.formIndex(&offsetEnd, offsetBy: 20, limitedBy: endIndex)
+            print("offset: \(offset), offsetEnd: \(offsetEnd)")
+            str += data[offset + 1 ..< offsetEnd].hexBytes
+            payload += data[offset + 1 ..< offsetEnd]
+            _ = data.formIndex(&offset, offsetBy: 20, limitedBy: endIndex)
+            if offset < endIndex { str += "\n" }
+        }
+        return (payload, str)
+    }
+
+
     /// called by Abbott Trasmitter class
     func read(_ data: Data, for uuid: String, from device: Transmitter) {
 
@@ -167,7 +188,8 @@ class Libre3: Libre2 {
 
         case ._2198:
             if data.count == 2 {
-                log("\(type) \(device.peripheral!.name!): will receive \(data[1]) + \(data[1] / 20 + 1) bytes")
+                expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
+                log("\(type) \(device.peripheral!.name!): will receive \(expectedStreamSize) bytes")
             }
 
         case ._22CE:
@@ -180,7 +202,8 @@ class Libre3: Libre2 {
 
                     // TODO: split the 20-byte packets and the leading progressive prefixes
 
-                    log("\(type) \(device.peripheral!.name!): received \(buffer.count) bytes :\n\(buffer.hexDump())")
+                    let(payload, hexDump) = parsePackets(buffer)
+                    log("\(type) \(device.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count)):\n\(hexDump)")
                     buffer = Data()
 
                     log("\(type) \(device.peripheral!.name!): TEST: sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
