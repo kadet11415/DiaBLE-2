@@ -208,13 +208,12 @@ class Libre3: Libre2 {
 
                 case .readChallenge:
 
-                    if buffer.count == 25 {
-
-                        // TODO: split the 20-byte packets and the leading progressive prefixes
+                    if buffer.count == expectedStreamSize {
 
                         let (payload, hexDump) = parsePackets(buffer)
                         log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count)):\n\(hexDump)")
                         buffer = Data()
+                        expectedStreamSize = 0
                         currentCommand = nil
 
                         log("\(type) \(transmitter!.peripheral!.name!): TEST: sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
