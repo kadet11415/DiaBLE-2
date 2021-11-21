@@ -318,9 +318,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         // TODO: Libre 3
 
         if serviceUUID == Libre3.UUID.unknown1.rawValue {
-            let cmd = Libre3.Command.readChallenge
-            log("Bluetooth: sending Libre 3 `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
-            app.device.write(Data([cmd.rawValue]), for: Libre3.UUID._2198.rawValue, .withResponse)
+            ((app.device as! Abbott).sensor! as! Libre3).send(command: .readChallenge)
         }
 
 

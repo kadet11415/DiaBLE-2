@@ -162,6 +162,13 @@ class Libre3: Libre2 {
     }
 
 
+    func send(command cmd: Command) {
+        log("Bluetooth: sending to \(type) \(transmitter!.peripheral!.name!) `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
+        currentCommand = cmd
+        transmitter!.write(Data([cmd.rawValue]), for: UUID._2198.rawValue, .withResponse)
+    }
+
+
     func parsePackets(_ data: Data) -> (Data, String) {
         var payload = Data()
         var str = ""
@@ -171,7 +178,6 @@ class Libre3: Libre2 {
         while offset < endIndex {
             str += data[offset].hex + "  "
             _ = data.formIndex(&offsetEnd, offsetBy: 20, limitedBy: endIndex)
-            print("offset: \(offset), offsetEnd: \(offsetEnd)")
             str += data[offset + 1 ..< offsetEnd].hexBytes
             payload += data[offset + 1 ..< offsetEnd]
             _ = data.formIndex(&offset, offsetBy: 20, limitedBy: endIndex)
@@ -182,14 +188,14 @@ class Libre3: Libre2 {
 
 
     /// called by Abbott Trasmitter class
-    func read(_ data: Data, for uuid: String, from device: Transmitter) {
+    func read(_ data: Data, for uuid: String) {
 
         switch UUID(rawValue: uuid) {
 
         case ._2198:
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
-                log("\(type) \(device.peripheral!.name!): will receive \(expectedStreamSize) bytes")
+                log("\(type) \(transmitter!.peripheral!.name!): will receive \(expectedStreamSize) bytes")
             }
 
         case ._22CE:
@@ -203,19 +209,19 @@ class Libre3: Libre2 {
                     // TODO: split the 20-byte packets and the leading progressive prefixes
 
                     let(payload, hexDump) = parsePackets(buffer)
-                    log("\(type) \(device.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count)):\n\(hexDump)")
+                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count)):\n\(hexDump)")
                     buffer = Data()
 
-                    log("\(type) \(device.peripheral!.name!): TEST: sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
-                    device.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
-                    device.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
-                    device.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
+                    log("\(type) \(transmitter!.peripheral!.name!): TEST: sending 0x22CE packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")
+                    transmitter!.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
+                    transmitter!.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
+                    transmitter!.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
 
 
                     // writing .getSessionInfo makes the Libre 3 disconnect
                     let cmd = Libre3.Command.getSessionInfo
                     log("Bluetooth: sending Libre 3 `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
-                    device.write(Data([cmd.rawValue]), for: Libre3.UUID._2198.rawValue, .withResponse)
+                    transmitter!.write(Data([cmd.rawValue]), for: Libre3.UUID._2198.rawValue, .withResponse)
                 }
             }
 

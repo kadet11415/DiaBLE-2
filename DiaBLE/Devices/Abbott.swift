@@ -181,7 +181,7 @@ class Abbott: Transmitter {
 
         default:
             if let sensor = sensor as? Libre3 {
-                sensor.read(data, for: uuid, from: self)
+                sensor.read(data, for: uuid)
             }
         }
     }
