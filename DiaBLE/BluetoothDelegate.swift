@@ -318,7 +318,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         // TODO: Libre 3
 
         if serviceUUID == Libre3.UUID.unknown1.rawValue {
-            ((app.device as! Abbott).sensor! as! Libre3).send(command: .readChallenge)
+            ((app.device as? Abbott)?.sensor as? Libre3)?.send(command: .readChallenge)
         }
 
 
