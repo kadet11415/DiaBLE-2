@@ -89,7 +89,11 @@ class Device: ObservableObject, Logging {
 
     func write(_ data: Data, for uuid: String = "", _ writeType: CBCharacteristicWriteType = .withoutResponse) {
         if uuid.isEmpty {
-            peripheral?.writeValue(data, for: writeCharacteristic!, type: writeType)
+            if writeCharacteristic != nil {
+                peripheral?.writeValue(data, for: writeCharacteristic!, type: writeType)
+            } else {
+                log("Bluetooth: \(name)'s write characteristic undefined: couldn't write")
+            }
         } else {
             peripheral?.writeValue(data, for: characteristics[uuid]!, type: writeType)
         }
