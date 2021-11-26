@@ -18,7 +18,7 @@ struct Details: View {
 
 
     // TODO:
-    @ViewBuilder func Row(_ label: String, _ value: String, foregroundColor: Color? = .primary) -> some View {
+    @ViewBuilder func Row(_ label: String, _ value: String, foregroundColor: Color? = .yellow) -> some View {
         if !value.isEmpty {
             HStack {
                 Text(label)
@@ -68,7 +68,7 @@ struct Details: View {
                                     Spacer()
                                     Text("\(secondsSinceLastConnection.minsAndSecsFormattedInterval)")
                                         .monospacedDigit()
-                                        .foregroundColor(app.device.state == .connected ? .primary : .red)
+                                        .foregroundColor(app.device.state == .connected ? .yellow : .red)
                                         .onReceive(timer) { _ in
                                             if let device = app.device {
                                                 secondsSinceLastConnection = Int(Date().timeIntervalSince(device.lastConnectionDate))

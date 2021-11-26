@@ -38,39 +38,40 @@ struct DataView: View {
                     }
             }
 
+            if history.factoryTrend.count + history.rawTrend.count > 0 {
+                HStack {
 
-            HStack {
+                    VStack {
 
-                VStack {
+                        if history.factoryTrend.count > 0 {
+                            VStack(spacing: 4) {
+                                Text("Trend").bold()
+                                List {
+                                    ForEach(history.factoryTrend) { glucose in
+                                        (Text("\(glucose.id) \(glucose.date.shortDateTime)") + Text(glucose.value > -1 ? "  \(glucose.value, specifier: "%3d")" : "   … ").bold()).frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                }.frame(maxWidth: .infinity, alignment: .topLeading)
+                            }.foregroundColor(.orange)
+                        }
 
-                    if history.factoryTrend.count > 0 {
-                        VStack(spacing: 4) {
-                            Text("Trend").bold()
-                            List {
-                                ForEach(history.factoryTrend) { glucose in
-                                    (Text("\(glucose.id) \(glucose.date.shortDateTime)") + Text(glucose.value > -1 ? "  \(glucose.value, specifier: "%3d")" : "   … ").bold()).frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                            }.frame(maxWidth: .infinity, alignment: .topLeading)
-                        }.foregroundColor(.orange)
                     }
 
-                }
+                    VStack {
 
-                VStack {
+                        if history.rawTrend.count > 0 {
+                            VStack(spacing: 4) {
+                                Text("Raw trend").bold()
+                                List {
+                                    ForEach(history.rawTrend) { glucose in
+                                        (Text("\(glucose.id) \(glucose.date.shortDateTime)") + Text(glucose.value > -1 ? "  \(glucose.value, specifier: "%3d")" : "   … ").bold()).frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                }.frame(maxWidth: .infinity, alignment: .topLeading)
+                            }.foregroundColor(.yellow)
+                        }
 
-                    if history.rawTrend.count > 0 {
-                        VStack(spacing: 4) {
-                            Text("Raw trend").bold()
-                            List {
-                                ForEach(history.rawTrend) { glucose in
-                                    (Text("\(glucose.id) \(glucose.date.shortDateTime)") + Text(glucose.value > -1 ? "  \(glucose.value, specifier: "%3d")" : "   … ").bold()).frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                            }.frame(maxWidth: .infinity, alignment: .topLeading)
-                        }.foregroundColor(.yellow)
                     }
-
-                }
-            }.frame(idealHeight: 300)
+                }.frame(idealHeight: 300)
+            }
 
 
             HStack {
