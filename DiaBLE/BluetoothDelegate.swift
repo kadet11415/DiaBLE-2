@@ -131,6 +131,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         } else if name!.prefix(6) == "Bubble" {
             app.transmitter = Bubble(peripheral: peripheral, main: main)
             app.device = app.transmitter
+            app.device.name = name!  // include "Mini"
 
         } else if name!.matches("miaomiao") {
             app.transmitter = MiaoMiao(peripheral: peripheral, main: main)
