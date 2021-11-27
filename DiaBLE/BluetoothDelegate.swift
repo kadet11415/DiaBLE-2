@@ -216,9 +216,8 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                 if serviceUUID == type(of: app.device).dataServiceUUID {
                     description = "data service"
                 }
-                // TODO
-                if serviceUUID == Libre3.UUID.data.rawValue {
-                    description = "data service"
+                if [Libre3.UUID.data.rawValue, Libre3.UUID.secondary.rawValue].contains(serviceUUID) {
+                    description = Libre3.UUID(rawValue: serviceUUID)!.description
                 }
                 if let uuid = BLE.UUID(rawValue: serviceUUID) {
                     description = uuid.description
