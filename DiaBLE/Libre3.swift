@@ -7,7 +7,7 @@ class Libre3: Libre2 {
     enum UUID: String, CustomStringConvertible, CaseIterable {
 
         /// Advertised primary data service
-        case data =      "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
+        case data = "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Requests past data by writing 13 zero-terminated bytes, notifies 10 zero-terminated bytes at the end of stream
         case data_1338 = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
@@ -31,7 +31,7 @@ class Libre3: Libre2 {
         case data_1D24 = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Secondary service
-        case unknown1 =  "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
+        case secondary = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Writes a single byte command, may notify in the second byte the effective length of the returned stripped stream
         /// 01: very first command when activating a sensor
@@ -43,30 +43,30 @@ class Libre3: Libre2 {
         /// 0D: during activation is written before 0E
         /// 0E: during activation notifies 0F 41 -> 23FA notifies 69 bytes
         /// 11: read the 23-byte security challenge, notifies 08 17
-        case _2198 = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case secondary_2198 = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Notifies the 23-byte security challenge + prefixes
         /// Writes the 40-byte unlock payload + prefixes
         /// Notifies the 67-byte session info + prefixes
-        case _22CE = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case secondary_22CE = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Writes and notifies 20-byte packets during activation
-        case _23FA = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case secondary_23FA = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         var description: String {
             switch self {
-            case .data:      return "Libre 3 data service"
-            case .data_1338: return "Libre 3 data 0x1338"
-            case .data_1482: return "Libre 3 data 0x1482"
-            case .data_177A: return "Libre 3 data 0x177A"
-            case .data_195A: return "Libre 3 data 0x195A"
-            case .data_1AB8: return "Libre 3 data 0x1AB8"
-            case .data_1BEE: return "Libre 3 data 0x1BEE"
-            case .data_1D24: return "Libre 3 data 0x1D24"
-            case .unknown1:  return "Libre 3 unknown service"
-            case ._2198:     return "Libre 3 unknown 0x2198"
-            case ._22CE:     return "Libre 3 unknown 0x22CE"
-            case ._23FA:     return "Libre 3 unknown 0x23FA"
+            case .data:           return "data service"
+            case .data_1338:      return "data 0x1338"
+            case .data_1482:      return "data 0x1482"
+            case .data_177A:      return "data 0x177A"
+            case .data_195A:      return "data 0x195A"
+            case .data_1AB8:      return "data 0x1AB8"
+            case .data_1BEE:      return "data 0x1BEE"
+            case .data_1D24:      return "data 0x1D24"
+            case .secondary:      return "secondary service"
+            case .secondary_2198: return "secondary 0x2198"
+            case .secondary_22CE: return "secondary 0x22CE"
+            case .secondary_23FA: return "secondary 0x23FA"
             }
         }
     }
@@ -167,7 +167,7 @@ class Libre3: Libre2 {
     func send(command cmd: Command) {
         log("Bluetooth: sending to \(type) \(transmitter!.peripheral!.name!) `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
         currentCommand = cmd
-        transmitter!.write(Data([cmd.rawValue]), for: UUID._2198.rawValue, .withResponse)
+        transmitter!.write(Data([cmd.rawValue]), for: UUID.secondary_2198.rawValue, .withResponse)
     }
 
 
@@ -194,13 +194,13 @@ class Libre3: Libre2 {
 
         switch UUID(rawValue: uuid) {
 
-        case ._2198:
+        case .secondary_2198:
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
                 log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes")
             }
 
-        case ._22CE:
+        case .secondary_22CE:
             if buffer.count == 0 {
                 buffer = Data(data)
             } else {

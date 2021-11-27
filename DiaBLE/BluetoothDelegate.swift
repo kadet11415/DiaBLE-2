@@ -251,9 +251,12 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             var msg = "Bluetooth: discovered \(app.device.name) \(serviceDescription) service's characteristic \(uuid)"
             msg += (", properties: \(characteristic.properties)")
 
-            if uuid == Libre3.UUID.data_1482.rawValue {
-                msg += " (Libre 3 data read); avoid enabling notifications because of 'Encryption is insufficient' error"
+            if Libre3.knownUUIDs.contains(uuid) {
+                msg += " (\(Libre3.UUID(rawValue: uuid)!.description))"
+            }
 
+            if uuid == Libre3.UUID.data_1482.rawValue {
+                msg += "; avoid enabling notifications because of 'Encryption is insufficient' error"
 
             } else if uuid == Abbott.dataReadCharacteristicUUID || uuid == BluCon.dataReadCharacteristicUUID || uuid == Bubble.dataReadCharacteristicUUID || uuid == MiaoMiao.dataReadCharacteristicUUID {
                 app.device.readCharacteristic = characteristic
@@ -299,7 +302,6 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                 //    msg += " (\(uuid))"
 
             } else {
-                msg += " (unknown)"
                 if characteristic.properties.contains(.notify) {
                     peripheral.setNotifyValue(true, for: characteristic)
                 }
@@ -318,12 +320,12 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
         // TODO: Libre 3
 
-        if serviceUUID == Libre3.UUID.unknown1.rawValue {
+        if serviceUUID == Libre3.UUID.secondary.rawValue {
             ((app.device as? Abbott)?.sensor as? Libre3)?.send(command: .readChallenge)
         }
 
 
-        if app.device.type == .transmitter(.abbott) && (serviceUUID == Abbott.dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue || serviceUUID == Libre3.UUID.unknown1.rawValue) {
+        if app.device.type == .transmitter(.abbott) && (serviceUUID == Abbott.dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue || serviceUUID == Libre3.UUID.secondary.rawValue) {
             var sensor: Sensor! = app.sensor
             if app.sensor == nil {
                 if serviceUUID == Libre3.UUID.data.rawValue {
@@ -484,8 +486,8 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         if let error = error {
             let errorCode = CBError.Code(rawValue: (error as NSError).code)!
             if errorCode == .encryptionTimedOut {
-            log("Bluetooth: DEBUG: TODO: manage pairing time out)")
-                // TODO: manage peering
+            log("Bluetooth: DEBUG: TODO: manage pairing time out")
+                // TODO: manage pairing
             }
             msg += ", error: \(error.localizedDescription)"
         }
