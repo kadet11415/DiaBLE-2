@@ -442,7 +442,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             msg += ", error type \(errorCode!.rawValue): \(error.localizedDescription)"
         }
 
-        if let errorCode = errorCode, errorCode.rawValue == 14 { // Peer removed pairing information (i.e. BluCon)
+        if let errorCode = errorCode, errorCode == .peerRemovedPairingInformation {  // i.e. BluCon
             main.errorStatus("Failed to connect: \(error!.localizedDescription)")
         } else {
             msg += "; retrying..."
@@ -481,7 +481,14 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         var msg = "Bluetooth: \(name) did update notification state for \(characteristicString) characteristic"
         msg += ": \(characteristic.isNotifying ? "" : "not ")notifying"
         if let descriptors = characteristic.descriptors { msg += ", descriptors: \(descriptors)" }
-        if let error = error { msg += ", error: \(error.localizedDescription)" }
+        if let error = error {
+            let errorCode = CBError.Code(rawValue: (error as NSError).code)!
+            if errorCode == .encryptionTimedOut {
+            log("Bluetooth: DEBUG: TODO: manage pairing time out)")
+                // TODO: manage peering
+            }
+            msg += ", error: \(error.localizedDescription)"
+        }
         log(msg)
     }
 

@@ -9,6 +9,9 @@ class BluCon: Transmitter {
     override class var type: DeviceType { DeviceType.transmitter(.blu) }
     override class var name: String { "BluCon" }
 
+    /// 6-digit pairing pass code, i.e. 415420
+    var pairingPassCode: Data = Data()
+
     enum UUID: String, CustomStringConvertible, CaseIterable {
         case data      = "436A62C0-082E-4CE8-A08B-01D81F195B24"
         case dataWrite = "436AA6E9-082E-4CE8-A08B-01D81F195B24"

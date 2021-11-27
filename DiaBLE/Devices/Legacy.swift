@@ -2,6 +2,10 @@ import Foundation
 import SwiftUI
 
 
+// https://github.com/birdfly/DiaBLE/commit/d604bf7
+// "Strip off the management of the Watlaa, preferred watches and bridge transmitters"
+
+
 class Droplet: Transmitter {
     // override class var type: DeviceType { DeviceType.transmitter(.droplet) }
     override class var name: String { "Droplet" }
@@ -590,10 +594,6 @@ struct Watch_Previews: PreviewProvider {
 }
 
 #endif
-
-
-// https://github.com/birdfly/DiaBLE/commit/d604bf7
-// "Strip off the management of the Watlaa, preferred watches and bridge transmitters"
 
 
 // Legacy code from bluetoothDelegate didDiscoverCharacteristicsFor:
