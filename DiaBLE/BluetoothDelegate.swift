@@ -462,6 +462,9 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         if [Abbott.dataWriteCharacteristicUUID, BluCon.dataWriteCharacteristicUUID, Bubble.dataWriteCharacteristicUUID, MiaoMiao.dataWriteCharacteristicUUID].contains(characteristicString) {
             characteristicString = "data write"
         }
+        if let characteristicDescription = Libre3.UUID(rawValue: characteristicString)?.description {
+            characteristicString = characteristicDescription
+        }
         if error != nil {
             log("Bluetooth: error while writing \(name)'s \(characteristicString) characteristic value: \(error!.localizedDescription)")
         } else {
@@ -480,13 +483,16 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         if [Abbott.dataReadCharacteristicUUID, BluCon.dataReadCharacteristicUUID, Bubble.dataReadCharacteristicUUID, MiaoMiao.dataReadCharacteristicUUID].contains(characteristicString) {
             characteristicString = "data read"
         }
+        if let characteristicDescription = Libre3.UUID(rawValue: characteristicString)?.description {
+            characteristicString = characteristicDescription
+        }
         var msg = "Bluetooth: \(name) did update notification state for \(characteristicString) characteristic"
         msg += ": \(characteristic.isNotifying ? "" : "not ")notifying"
         if let descriptors = characteristic.descriptors { msg += ", descriptors: \(descriptors)" }
         if let error = error {
             let errorCode = CBError.Code(rawValue: (error as NSError).code)!
             if errorCode == .encryptionTimedOut {
-            log("Bluetooth: DEBUG: TODO: manage pairing time out")
+            log("Bluetooth: DEBUG: TODO: manage pairing timeout")
                 // TODO: manage pairing
             }
             msg += ", error: \(error.localizedDescription)"
@@ -501,9 +507,8 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         if [Abbott.dataReadCharacteristicUUID, BluCon.dataReadCharacteristicUUID, Bubble.dataReadCharacteristicUUID, MiaoMiao.dataReadCharacteristicUUID].contains(characteristicString) {
             characteristicString = "data read"
         }
-
-        if let uuid = Abbott.UUID(rawValue: characteristicString), uuid.description.hasPrefix("Libre 3") {
-            characteristicString = uuid.description
+        if let characteristicDescription = Libre3.UUID(rawValue: characteristicString)?.description {
+            characteristicString = characteristicDescription
         }
 
         guard let data = characteristic.value else {
