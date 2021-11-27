@@ -71,6 +71,8 @@ class Libre3: Libre2 {
         }
     }
 
+    class var knownUUIDs: [String] { UUID.allCases.map{$0.rawValue} }
+
 
     // maximum packet size is 20
     // notified packets are prefixed by 00, 01, 02, ...
