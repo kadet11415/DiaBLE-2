@@ -213,7 +213,7 @@ class Libre3: Libre2 {
                     if buffer.count == expectedStreamSize {
 
                         let (payload, hexDump) = parsePackets(buffer)
-                        log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count)):\n\(hexDump)")
+                        log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes):\n\(hexDump)")
                         buffer = Data()
                         expectedStreamSize = 0
                         currentCommand = nil
