@@ -206,17 +206,15 @@ class Libre3: Libre2 {
             } else {
                 buffer += data
 
-                switch currentCommand {
+                if buffer.count == expectedStreamSize {
 
-                case .readChallenge:
+                    let (payload, hexDump) = parsePackets(buffer)
+                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes):\n\(hexDump)")
 
-                    if buffer.count == expectedStreamSize {
+                    switch currentCommand {
 
-                        let (payload, hexDump) = parsePackets(buffer)
-                        log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes):\n\(hexDump)")
-                        buffer = Data()
-                        expectedStreamSize = 0
-                        currentCommand = nil
+                    case .readChallenge:
+                        log("\(type) \(transmitter!.peripheral!.name!): security challenge: \(payload.hex)")
 
                         // TODO: write(command:)
 
@@ -227,10 +225,18 @@ class Libre3: Libre2 {
 
                         // writing .getSessionInfo makes the Libre 3 disconnect
                         send(command: .getSessionInfo)
+
+                    case .getSessionInfo:
+                        log("\(type) \(transmitter!.peripheral!.name!): session info: \(payload.hex)")
+
+                    default:
+                        break // currentCommand
                     }
 
-                default:
-                    break // ._22CE
+                    buffer = Data()
+                    expectedStreamSize = 0
+                    currentCommand = nil
+
                 }
             }
 
