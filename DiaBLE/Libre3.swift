@@ -216,6 +216,9 @@ class Libre3: Libre2 {
                     case .readChallenge:
                         log("\(type) \(transmitter!.peripheral!.name!): security challenge: \(payload.hex)")
 
+                        // getting: df4bd2f783178e3ab918183e5fed2b2b c201 0000 e703a7
+                        //                                        increasing
+
                         // TODO: write(command:)
 
                         log("\(type) \(transmitter!.peripheral!.name!): TEST: sending to 0x22CE zeroed packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00")

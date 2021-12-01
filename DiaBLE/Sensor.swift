@@ -244,6 +244,15 @@ class Sensor: ObservableObject, Logging {
 
     var fram: Data = Data() {
         didSet {
+            encryptedFram = Data()
+            if (type == .libre2 || type == .libreUS14day) && UInt16(fram[0...1]) != crc16(fram[2...23]) {
+                encryptedFram = fram
+                if fram.count >= 344 {
+                    if let decryptedFRAM = try? Libre2.decryptFRAM(type: type, id: uid, info: patchInfo, data: fram) {
+                        fram = decryptedFRAM
+                    }
+                }
+            }
             parseFRAM()
         }
     }
@@ -269,15 +278,6 @@ class Sensor: ObservableObject, Logging {
 
 
     func parseFRAM() {
-        encryptedFram = Data()
-        if (type == .libre2 || type == .libreUS14day) && UInt16(fram[0...1]) != crc16(fram[2...23]) {
-            encryptedFram = fram
-            if fram.count >= 344 {
-                if let decryptedFRAM = try? Libre2.decryptFRAM(type: type, id: uid, info: patchInfo, data: fram) {
-                    fram = decryptedFRAM
-                }
-            }
-        }
         updateCRCReport()
         guard !crcReport.contains("FAILED") else {
             state = .unknown

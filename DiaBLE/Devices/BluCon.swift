@@ -10,7 +10,7 @@ class BluCon: Transmitter {
     override class var name: String { "BluCon" }
 
     /// 6-digit pairing pass code, i.e. 415420
-    var pairingPassCode: Data = Data()
+    var passCode: Data = Data()
 
     enum UUID: String, CustomStringConvertible, CaseIterable {
         case data      = "436A62C0-082E-4CE8-A08B-01D81F195B24"
@@ -75,6 +75,7 @@ class BluCon: Transmitter {
         case none         = ""
         case ack          = "81 0a 00"
         case sleep        = "01 0c 0e 00"
+        case wakeupReply  = "01 0c 0f 00"
         case sensorInfo   = "01 0d 09 00"
         case fram         = "01 0d 0f 02 00 2b"
         case battery      = "01 0d 0a 00"
@@ -87,6 +88,7 @@ class BluCon: Transmitter {
             case .none:        return "none"
             case .ack:         return "ack"
             case .sleep:       return "sleep"
+            case .wakeupReply: return "wake up response"
             case .sensorInfo:  return "sensor info"
             case .fram:        return "fram"
             case .battery:     return "battery"
