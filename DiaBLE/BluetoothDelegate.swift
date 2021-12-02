@@ -316,14 +316,6 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
         }
 
-
-        // TODO: Libre 3
-
-        if serviceUUID == Libre3.UUID.secondary.rawValue {
-            ((app.device as? Abbott)?.sensor as? Libre3)?.send(command: .readChallenge)
-        }
-
-
         if app.device.type == .transmitter(.abbott) && (serviceUUID == Abbott.dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue || serviceUUID == Libre3.UUID.secondary.rawValue) {
             var sensor: Sensor! = app.sensor
             if app.sensor == nil {
@@ -369,7 +361,12 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             }
             app.device.macAddress = settings.activeSensorAddress
 
-            if (app.transmitter as! Abbott).securityGeneration == 2 && (app.transmitter as! Abbott).authenticationState == .notAuthenticated {
+            // TODO: Libre 3
+            if serviceUUID == Libre3.UUID.secondary.rawValue {
+                if sensor.transmitter == nil { sensor.transmitter = app.transmitter }
+                ((app.device as? Abbott)?.sensor as? Libre3)?.send(command: .readChallenge)
+
+            } else if (app.transmitter as! Abbott).securityGeneration == 2 && (app.transmitter as! Abbott).authenticationState == .notAuthenticated {
                 app.device.peripheral?.setNotifyValue(true, for: app.device.writeCharacteristic!)
                 (app.transmitter as! Abbott).authenticationState = .enableNotification
                 debugLog("Bluetooth: enabled \(app.device.name) security notification")
