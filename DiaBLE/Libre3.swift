@@ -16,7 +16,7 @@ class Libre3: Libre2 {
         // Receiving "Encryption is insufficient" error when activating notifications
         case data_1482 = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
 
-        /// Notifies every minute 35 bytes as two packets of 15 + 20 zero-terminated bytes
+        /// Notifies every minute 35 bytes as two packets of 15 + 20 bytes ending in a sequential id
         case data_177A = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies a first stream of recent data while the curve is drawn on display
@@ -25,7 +25,7 @@ class Libre3: Libre2 {
         /// Notifies a second longer stream of past data
         case data_1AB8 = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        /// Notifies 20 + 20 bytes towards the end of activation (session info?)
+        /// Notifies 20 + 20 bytes towards the end of activation (session info)
         case data_1BEE = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies the final stream of data during activation
@@ -214,9 +214,19 @@ class Libre3: Libre2 {
 
         switch UUID(rawValue: uuid) {
 
+        case .data_1338:
+            if data.count == 10 {
+                let suffix = data.suffix(2).hex
+                if suffix == "0100" {
+                    // TODO: end of 1950 recent data
+                } else if suffix == "0200" {
+                    // TODO: end of 1AB8 past data
+                }
+                buffer = Data()
+            }
+
             // The Libre 3 sends every minute 35 bytes as two packets of 15 + 20 bytes
             // The final Int is a sequential id -- never tested, actually
-
         case .data_177A:
             if buffer.count == 0 {
                 buffer = Data(data)
