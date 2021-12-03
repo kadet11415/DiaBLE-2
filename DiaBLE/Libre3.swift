@@ -135,7 +135,7 @@ class Libre3: Libre2 {
     /// Single byte command written to 0x2198
     enum Command: UInt8, CustomStringConvertible {
 
-        /// can be sent sequentially not only during the initial sensor activation
+        // can be sent sequentially not only during the initial sensor activation
         case activate_01    = 0x01
         case activate_02    = 0x02
         case activate_03    = 0x03
@@ -212,6 +212,22 @@ class Libre3: Libre2 {
     func read(_ data: Data, for uuid: String) {
 
         switch UUID(rawValue: uuid) {
+
+            // The Libre 3 sends every minute 35 bytes as two packets of 15 + 20 bytes
+            // The final Int is a sequential id -- never tested, actually
+
+        case .data_177A:
+            if buffer.count == 0 {
+                buffer = Data(data)
+            } else {
+                buffer += data
+                if buffer.count == 35 {
+                    let payload = data.prefix(33)
+                    let id = UInt16(data.suffix(2))
+                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
+                    buffer = Data()
+                }
+            }
 
         case .secondary_2198:
             if data.count == 2 {
