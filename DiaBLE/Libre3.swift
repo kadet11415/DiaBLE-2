@@ -9,7 +9,8 @@ class Libre3: Libre2 {
         /// Advertised primary data service
         case data = "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
 
-        /// Requests past data by writing 13 zero-terminated bytes, notifies 10 zero-terminated bytes at the end of stream
+        /// Requests data by writing 13 bytes ending in 0100 for recent data (195A), 0200 for past data (1AB8)
+        /// Notifies 10 bytes at the end of stream ending in 0100 for 195A, 0200 for 1AB8
         case data_1338 = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
@@ -124,12 +125,12 @@ class Libre3: Libre2 {
     // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
     // notify 1482  18 bytes
     // enable notifications for 177A
-    // write  1338  13 bytes (final 0)
+    // write  1338  13 bytes
     // notify 1BBE  20 + 20 bytes
-    // notify 1338  10 bytes (final 0)
+    // notify 1338  10 bytes
     // write  1338  13 bytes
     // notify 1D24  20 * 10 + 15 bytes
-    // notify 1338  10 bytes (final 0)
+    // notify 1338  10 bytes
 
 
     /// Single byte command written to 0x2198
@@ -228,6 +229,17 @@ class Libre3: Libre2 {
                     buffer = Data()
                 }
             }
+
+        case .data_195A, .data_1AB8:
+            if buffer.count == 0 {
+                buffer = Data(data)
+            } else {
+                buffer += data
+            }
+            let payload = data.prefix(18)
+            let id = UInt16(data.suffix(2))
+            log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
+            // TODO: the end of the stream is notified by 1338 with 10 bytes ending in 0100 for 195A, 0200 for 1AB8
 
         case .secondary_2198:
             if data.count == 2 {
