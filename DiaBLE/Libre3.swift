@@ -91,7 +91,7 @@ class Libre3: Libre2 {
     // notify 1482  18 bytes
     // enable notifications for 177A
     // write  1338  13 bytes
-    // notify 177A  15 + 20 bytes
+    // notify 177A  15 + 20 bytes       // every minute
     // notify 195A  20-byte packets of recent data
     // notify 1338  10 bytes
     // write  1338  13 bytes
@@ -159,9 +159,10 @@ class Libre3: Libre2 {
     func parsePatchInfo() {
         if patchInfo.count == 28 {
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
-            // TODO: state 08 for a detched sensor (https://github.com/gui-dos/DiaBLE/discussions/7)
+            // TODO: are state 03 and 07 skipped?
+            // state 04 detected already after 20 minutes, 08 for a detached sensor
             let sensorState = patchInfo[16]
-            state = SensorState(rawValue: sensorState - 1) ?? .unknown
+            state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
             log("Libre 3: state: \(state.description.lowercased()) (0x\(sensorState.hex))")
         }
     }
