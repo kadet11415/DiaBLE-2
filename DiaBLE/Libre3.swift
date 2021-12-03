@@ -222,8 +222,8 @@ class Libre3: Libre2 {
             } else {
                 buffer += data
                 if buffer.count == 35 {
-                    let payload = data.prefix(33)
-                    let id = UInt16(data.suffix(2))
+                    let payload = buffer.prefix(33)
+                    let id = UInt16(buffer.suffix(2))
                     log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
                     buffer = Data()
                 }
