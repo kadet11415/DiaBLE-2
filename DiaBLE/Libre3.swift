@@ -77,6 +77,7 @@ class Libre3: Libre2 {
     // maximum packet size is 20
     // notified packets are prefixed by 00, 01, 02, ...
     // written packets are prefixed by 00 00, 12 00, 24 00, 36 00, ...
+    // data packets are terminated by a sequential Int
     //
     // Connection:
     // enable notifications for 2198, 23FA and 22CE
@@ -134,14 +135,28 @@ class Libre3: Libre2 {
     /// Single byte command written to 0x2198
     enum Command: UInt8, CustomStringConvertible {
 
+        /// can be sent sequentially not only during the initial sensor activation
+        case activate_01    = 0x01
+        case activate_02    = 0x02
+        case activate_03    = 0x03
+        case activate_09    = 0x09
+        case activate_0D    = 0x0D
+        case activate_0E    = 0x0E
+
         /// final command to get a 67-byte session info
-        case getSessionInfo  = 0x08
+        case getSessionInfo = 0x08
 
         /// first command sent when reconnecting
-        case readChallenge   = 0x11
+        case readChallenge  = 0x11
 
         var description: String {
             switch self {
+            case .activate_01:    return "activation 1st command"
+            case .activate_02:    return "activation 2nd command"
+            case .activate_03:    return "activation 3rd command"
+            case .activate_09:    return "activation 0x09 command"
+            case .activate_0D:    return "activation 0x0D command"
+            case .activate_0E:    return "activation 0x0E command"
             case .getSessionInfo: return "get session info"
             case .readChallenge:  return "read security challenge"
             }
