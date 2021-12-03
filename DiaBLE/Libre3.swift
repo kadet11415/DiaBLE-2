@@ -159,7 +159,7 @@ class Libre3: Libre2 {
     func parsePatchInfo() {
         if patchInfo.count == 28 {
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
-            // TODO: are state 03 and 07 skipped?
+            // TODO: are states 03 and 07 skipped?
             // state 04 detected already after 20 minutes, 08 for a detached sensor
             let sensorState = patchInfo[16]
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
@@ -218,10 +218,12 @@ class Libre3: Libre2 {
                     switch currentCommand {
 
                     case .readChallenge:
-                        log("\(type) \(transmitter!.peripheral!.name!): security challenge: \(payload.hex)")
 
                         // getting: df4bd2f783178e3ab918183e5fed2b2b c201 0000 e703a7
                         //                                        increasing
+
+                        let challengeCount = UInt16(payload[16...17])
+                        log("\(type) \(transmitter!.peripheral!.name!): security challenge # \(challengeCount.hex): \(payload.hex)")
 
                         // TODO: write(command:)
 
