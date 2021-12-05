@@ -254,6 +254,7 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
 
                 do {
                     patchInfo = Data(try await tag.customCommand(requestFlags: .highDataRate, customCommandCode: 0xA1, customRequestParameters: Data()))
+                    debugLog("NFC: patch info (first read): \(patchInfo.hex) (\(patchInfo.count) bytes)")
                 } catch {
                     failedToScan = true
                 }
