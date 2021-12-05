@@ -254,7 +254,7 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
 
                 do {
                     patchInfo = Data(try await tag.customCommand(requestFlags: .highDataRate, customCommandCode: 0xA1, customRequestParameters: Data()))
-                    debugLog("NFC: patch info (first read): \(patchInfo.hex) (\(patchInfo.count) bytes)")
+                    debugLog("NFC: patch info (first reading): \(patchInfo.hex) (\(patchInfo.count) bytes), string: \"\(patchInfo.string)\"")
                 } catch {
                     failedToScan = true
                 }
@@ -363,7 +363,7 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
             if let sensor = sensor as? Libre3 {
                 sensor.parsePatchInfo()
                 let aa = try await send(NFCCommand(code: 0xAA))
-                log("NFC: Libre 3 `AA` command output: \(aa.hexBytes), CRC: \(Data(aa.suffix(2).reversed()).hex), computed CRC: \(aa.prefix(aa.count-2).crc16.hex)")
+                log("NFC: Libre 3 `AA` command output: \(aa.hexBytes), CRC: \(Data(aa.suffix(2).reversed()).hex), computed CRC: \(aa.prefix(aa.count-2).crc16.hex), string: \"\(aa.string)\"")
             }
 
             log("NFC: sensor serial number: \(sensor.serial)")

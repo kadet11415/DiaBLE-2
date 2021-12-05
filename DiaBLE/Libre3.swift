@@ -181,6 +181,10 @@ class Libre3: Libre2 {
             let sensorState = patchInfo[16]
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
             log("Libre 3: state: \(state.description.lowercased()) (0x\(sensorState.hex))")
+            let serialNumber = Data(patchInfo[17...25])
+            serial = serialNumber.string
+            log("Libre 3: serial number: \(serialNumber.string) (0x\(serialNumber.hex))")
+
         }
     }
 
