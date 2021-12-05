@@ -177,7 +177,7 @@ class Libre3: Libre2 {
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
             // TODO: are states 03 and 07 skipped?
             // state 04 detected already after 20 minutes, 08 for a detached sensor
-            // 05 lasts more than 12 hours, almost 24
+            // 05 lasts more than 12 hours, almost 24, before that BLE shuts down
             let sensorState = patchInfo[16]
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
             log("Libre 3: state: \(state.description.lowercased()) (0x\(sensorState.hex))")
@@ -282,7 +282,7 @@ class Libre3: Libre2 {
                         // TODO: write(command:)
 
                         // TODO: write the unlock payload
-                        log("\(type) \(transmitter!.peripheral!.name!): TEST: sending to 0x22CE zeroed packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00 (it should be the unloack payload)")
+                        log("\(type) \(transmitter!.peripheral!.name!): TEST: sending to 0x22CE zeroed packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00 (it should be the unlock payload)")
                         transmitter!.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                         transmitter!.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
                         transmitter!.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
