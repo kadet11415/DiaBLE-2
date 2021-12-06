@@ -5,6 +5,8 @@ FIXME
   - *"NFC scan success sheet displayed when NFC scan time out"* (https://developer.apple.com/forums/thread/687264)
 * Xcode 13:
   - *"No 'async' operations occur within 'await' expression"* warnings
+* Catalyst:
+  - log bogging down too early
 * @Published classes nonsense
 * the new Libre2() subclass is not instantiated specifically in Transmitters
 * `@AppStorage(selectedTab)` prevents managing the "More..." fifth tab item
@@ -21,6 +23,7 @@ TODO
 * smoothing the historic values and projecting the trend ones
 * come back to an iPad Swift Playgrounds 4 app (no NFC)
 * log: limit to a number of readings, autoscroll to bottom, prepend time, Share menu, record to a file, add Logger support
+* HealthKit, Nightscout: more than just a few ported dozen lines of code
 * profile and avoid retain cycles
 * make use of Actors, Combine, TabularData, ...
 
