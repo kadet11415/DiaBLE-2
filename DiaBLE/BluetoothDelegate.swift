@@ -318,7 +318,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
         if app.device.type == .transmitter(.abbott) && (serviceUUID == Abbott.dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue || serviceUUID == Libre3.UUID.secondary.rawValue) {
             var sensor: Sensor! = app.sensor
-            if app.sensor == nil {
+            if app.sensor == nil || app.sensor.transmitter?.type != app.device.type {
                 if serviceUUID == Libre3.UUID.data.rawValue {
                     sensor = Libre3(transmitter: app.transmitter)
                 } else {
@@ -331,7 +331,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                 settings.patchUid = sensor.uid
 
                 if settings.activeSensorSerial == app.device.serial {
-                    if !settings.patchInfo.isEmpty {
+                    if !app.device.serial.isEmpty && !settings.patchInfo.isEmpty {
                         sensor.patchInfo = settings.patchInfo
 
                     } else {
@@ -351,7 +351,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
             app.transmitter.sensor = sensor
 
-            if settings.activeSensorSerial == app.device.serial {
+            if !app.device.serial.isEmpty && app.device.serial == settings.activeSensorSerial {
                 sensor.initialPatchInfo = settings.activeSensorInitialPatchInfo
                 sensor.streamingUnlockCode = UInt32(settings.activeSensorStreamingUnlockCode)
                 sensor.streamingUnlockCount = UInt16(settings.activeSensorStreamingUnlockCount)
