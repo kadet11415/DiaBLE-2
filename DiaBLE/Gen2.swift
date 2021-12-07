@@ -225,7 +225,7 @@ extension NFC {
         if await main.settings.debugLevel > 0 {
 
             for c in 0xA0 ... 0xDF {
-                commands.append(NFCCommand(code: c, description: c.hex))
+                commands.append(NFCCommand(code: c, parameters: Data(), description: c.hex))
             }
 
             // Gen2 supported commands: A1, B1, B2, B4
@@ -238,7 +238,7 @@ extension NFC {
             // getting zeros from standard read command 0x23
         }
         for cmd in commands {
-            log("NFC: sending \(sensor.type) '\(cmd.description)' command: code: 0x\(cmd.code.hex), parameters: 0x\(cmd.parameters.hex)")
+            log("NFC: sending \(sensor.type) '\(cmd.description)' command: code: 0x\(cmd.code.hex), parameters: \(cmd.parameters.count == 00 ? "[]" : " 0x\(cmd.parameters.hex)")")
             do {
                 let output = try await connectedTag!.customCommand(requestFlags: .highDataRate, customCommandCode: cmd.code, customRequestParameters: cmd.parameters)
                 log("NFC: '\(cmd.description)' command output (\(output.count) bytes): 0x\(output.hex)")

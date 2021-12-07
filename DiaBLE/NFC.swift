@@ -504,11 +504,11 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
     func send(_ cmd: NFCCommand) async throws -> Data {
         var data = Data()
         do {
-            debugLog("NFC: sending \(sensor.type) '\(cmd.code.hex) \(cmd.parameters.hex)' custom command\(cmd.description == "" ? "" : " (\(cmd.description))")")
+            debugLog("NFC: sending \(sensor.type) '\(cmd.code.hex)\(cmd.parameters.count == 0 ? "" : " \(cmd.parameters.hex)")' custom command\(cmd.description == "" ? "" : " (\(cmd.description))")")
             let output = try await connectedTag?.customCommand(requestFlags: .highDataRate, customCommandCode: cmd.code, customRequestParameters: cmd.parameters)
             data = Data(output!)
         } catch {
-            log("NFC: \(sensor.type) '\(cmd.description) \(cmd.code.hex) \(cmd.parameters.hex)' custom command error: \(error.localizedDescription) (ISO 15693 error 0x\(error.iso15693Code.hex): \(error.iso15693Description))")
+            log("NFC: \(sensor.type) '\(cmd.description) \(cmd.code.hex)\(cmd.parameters.count == 0 ? "" : " \(cmd.parameters.hex)")' custom command error: \(error.localizedDescription) (ISO 15693 error 0x\(error.iso15693Code.hex): \(error.iso15693Description))")
             throw error
         }
         return data
