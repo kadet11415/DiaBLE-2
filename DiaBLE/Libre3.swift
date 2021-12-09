@@ -44,7 +44,7 @@ class Libre3: Libre2 {
         /// 0D: during activation is written before 0E
         /// 0E: during activation notifies 0F 41 -> 23FA notifies 69 bytes
         /// 11: read the 23-byte security challenge, notifies 08 17
-        case secondary_2198 = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case patchControl = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Notifies the 23-byte security challenge + prefixes
         /// Writes the 40-byte unlock payload + prefixes
@@ -65,7 +65,7 @@ class Libre3: Libre2 {
             case .data_1BEE:        return "data 0x1BEE"
             case .data_1D24:        return "data 0x1D24"
             case .secondary:        return "secondary service"
-            case .secondary_2198:   return "secondary 0x2198"
+            case .patchControl:     return "patch control"
             case .secondary_22CE:   return "secondary 0x22CE"
             case .secondary_23FA:   return "secondary 0x23FA"
             }
@@ -192,7 +192,7 @@ class Libre3: Libre2 {
     func send(command cmd: Command) {
         log("Bluetooth: sending to \(type) \(transmitter!.peripheral!.name!) `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
         currentCommand = cmd
-        transmitter!.write(Data([cmd.rawValue]), for: UUID.secondary_2198.rawValue, .withResponse)
+        transmitter!.write(Data([cmd.rawValue]), for: UUID.patchControl.rawValue, .withResponse)
     }
 
 
@@ -268,7 +268,7 @@ class Libre3: Libre2 {
             log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
             // TODO: the end of the stream is notified by 1338 with 10 bytes ending in 0100 for 195A, 0200 for 1AB8
 
-        case .secondary_2198:
+        case .patchControl:
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
                 log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes")
