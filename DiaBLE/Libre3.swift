@@ -17,7 +17,7 @@ class Libre3: Libre2 {
         case data_1482 = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
 
         /// Notifies every minute 35 bytes as two packets of 15 + 20 bytes ending in a sequential id
-        case data_177A = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case oneMinuteReading = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies a first stream of recent data while the curve is drawn on display
         case data_195A = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
@@ -56,18 +56,18 @@ class Libre3: Libre2 {
 
         var description: String {
             switch self {
-            case .data:           return "data service"
-            case .data_1338:      return "data 0x1338"
-            case .data_1482:      return "data 0x1482"
-            case .data_177A:      return "data 0x177A"
-            case .data_195A:      return "data 0x195A"
-            case .data_1AB8:      return "data 0x1AB8"
-            case .data_1BEE:      return "data 0x1BEE"
-            case .data_1D24:      return "data 0x1D24"
-            case .secondary:      return "secondary service"
-            case .secondary_2198: return "secondary 0x2198"
-            case .secondary_22CE: return "secondary 0x22CE"
-            case .secondary_23FA: return "secondary 0x23FA"
+            case .data:             return "data service"
+            case .data_1338:        return "data 0x1338"
+            case .data_1482:        return "data 0x1482"
+            case .oneMinuteReading: return "one-minute reading"
+            case .data_195A:        return "data 0x195A"
+            case .data_1AB8:        return "data 0x1AB8"
+            case .data_1BEE:        return "data 0x1BEE"
+            case .data_1D24:        return "data 0x1D24"
+            case .secondary:        return "secondary service"
+            case .secondary_2198:   return "secondary 0x2198"
+            case .secondary_22CE:   return "secondary 0x22CE"
+            case .secondary_23FA:   return "secondary 0x23FA"
             }
         }
     }
@@ -93,7 +93,7 @@ class Libre3: Libre2 {
     // notify 1482  18 bytes
     // enable notifications for 177A
     // write  1338  13 bytes
-    // notify 177A  15 + 20 bytes       // every minute
+    // notify 177A  15 + 20 bytes       // one-minute reading
     // notify 195A  20-byte packets of recent data
     // notify 1338  10 bytes
     // write  1338  13 bytes
@@ -243,8 +243,8 @@ class Libre3: Libre2 {
             }
 
             // The Libre 3 sends every minute 35 bytes as two packets of 15 + 20 bytes
-            // The final Int is a sequential id -- never tested, actually
-        case .data_177A:
+            // The final Int is a sequential id
+        case .oneMinuteReading:
             if buffer.count == 0 {
                 buffer = Data(data)
             } else {

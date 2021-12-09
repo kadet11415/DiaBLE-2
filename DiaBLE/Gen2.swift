@@ -238,7 +238,7 @@ extension NFC {
             // getting zeros from standard read command 0x23
         }
         for cmd in commands {
-            log("NFC: sending \(sensor.type) '\(cmd.description)' command: code: 0x\(cmd.code.hex), parameters: \(cmd.parameters.count == 00 ? "[]" : " 0x\(cmd.parameters.hex)")")
+            log("NFC: sending \(sensor.type) '\(cmd.description)' command: code: 0x\(cmd.code.hex), parameters: \(cmd.parameters.count == 0 ? "[]" : "0x\(cmd.parameters.hex)")")
             do {
                 let output = try await connectedTag!.customCommand(requestFlags: .highDataRate, customCommandCode: cmd.code, customRequestParameters: cmd.parameters)
                 log("NFC: '\(cmd.description)' command output (\(output.count) bytes): 0x\(output.hex)")
