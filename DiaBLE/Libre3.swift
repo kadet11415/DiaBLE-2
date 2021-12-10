@@ -14,7 +14,7 @@ class Libre3: Libre2 {
         case patchControl = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
-        /// Notifies 18 bytes at connection
+        /// Notifies 18 bytes ending in 01 00 during a connection
         case patchStatus = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
 
         /// Notifies every minute 35 bytes as two packets of 15 + 20 bytes ending in a sequential id
@@ -53,8 +53,9 @@ class Libre3: Libre2 {
         case challengeData = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Writes and notifies 20-byte packets during activation and repairing a sensor
-        case securityCert = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case certificateData = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
+        // TODO: eventLog, historicData, clinicalData, 
         var description: String {
             switch self {
             case .data:             return "data service"
@@ -68,7 +69,7 @@ class Libre3: Libre2 {
             case .secondary:        return "secondary service"
             case .securityCommands: return "security commands"
             case .challengeData:    return "challenge data"
-            case .securityCert:     return "security cert"
+            case .certificateData:  return "certificate data"
             }
         }
     }
