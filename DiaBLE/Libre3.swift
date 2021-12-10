@@ -49,7 +49,7 @@ class Libre3: Libre2 {
         /// Notifies the 23-byte security challenge + prefixes
         /// Writes the 40-byte unlock payload + prefixes
         /// Notifies the 67-byte session info + prefixes
-        case secondary_22CE = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case challengeData = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Writes and notifies 20-byte packets during activation
         case secondary_23FA = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
@@ -66,7 +66,7 @@ class Libre3: Libre2 {
             case .data_1D24:        return "data 0x1D24"
             case .secondary:        return "secondary service"
             case .securityCommands: return "security commands"
-            case .secondary_22CE:   return "secondary 0x22CE"
+            case .challengeData:    return "challenge data"
             case .secondary_23FA:   return "secondary 0x23FA"
             }
         }
@@ -283,7 +283,7 @@ class Libre3: Libre2 {
                 log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes")
             }
 
-        case .secondary_22CE:
+        case .challengeData:
             if buffer.count == 0 {
                 buffer = Data(data)
             } else {
