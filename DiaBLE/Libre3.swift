@@ -51,8 +51,8 @@ class Libre3: Libre2 {
         /// Notifies the 67-byte session info + prefixes
         case challengeData = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
-        /// Writes and notifies 20-byte packets during activation
-        case secondary_23FA = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        /// Writes and notifies 20-byte packets during activation and repairing a sensor
+        case securityCert = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         var description: String {
             switch self {
@@ -67,7 +67,7 @@ class Libre3: Libre2 {
             case .secondary:        return "secondary service"
             case .securityCommands: return "security commands"
             case .challengeData:    return "challenge data"
-            case .secondary_23FA:   return "secondary 0x23FA"
+            case .securityCert:     return "security cert"
             }
         }
     }
@@ -344,7 +344,7 @@ class Libre3: Libre2 {
 
 // MARK: - PacketLogger logs
 
-// Written to 23FA after the commands 01 and 02 both during activation and reconnection:
+// Written to the .securityCert 0x23FA characteristic after the commands 01 and 02 during both activation and repairing a sensor:
 
 // 00 00 03 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10
 // 12 00 00 01 5F 14 9F E1 01 00 00 00 00 00 00 00 00 04 E2 36
