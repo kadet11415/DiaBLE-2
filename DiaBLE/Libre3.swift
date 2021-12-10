@@ -11,7 +11,7 @@ class Libre3: Libre2 {
 
         /// Requests data by writing 13 bytes ending in 0100 for recent data (195A), 0200 for past data (1AB8)
         /// Notifies 10 bytes at the end of stream ending in 0100 for 195A, 0200 for 1AB8
-        case data_1338 = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case patchControl = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
         case data_1482 = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
@@ -44,7 +44,7 @@ class Libre3: Libre2 {
         /// 0D: during activation is written before 0E
         /// 0E: during activation notifies 0F 41 -> 23FA notifies 69 bytes
         /// 11: read the 23-byte security challenge, notifies 08 17
-        case patchControl = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
+        case securityCommands = "08982198-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Notifies the 23-byte security challenge + prefixes
         /// Writes the 40-byte unlock payload + prefixes
@@ -57,7 +57,7 @@ class Libre3: Libre2 {
         var description: String {
             switch self {
             case .data:             return "data service"
-            case .data_1338:        return "data 0x1338"
+            case .patchControl:     return "patch control"
             case .data_1482:        return "data 0x1482"
             case .oneMinuteReading: return "one-minute reading"
             case .data_195A:        return "data 0x195A"
@@ -65,7 +65,7 @@ class Libre3: Libre2 {
             case .data_1BEE:        return "data 0x1BEE"
             case .data_1D24:        return "data 0x1D24"
             case .secondary:        return "secondary service"
-            case .patchControl:     return "patch control"
+            case .securityCommands: return "security commands"
             case .secondary_22CE:   return "secondary 0x22CE"
             case .secondary_23FA:   return "secondary 0x23FA"
             }
@@ -133,8 +133,8 @@ class Libre3: Libre2 {
     // notify 1338  10 bytes
 
 
-    /// Single byte command written to 0x2198
-    enum Command: UInt8, CustomStringConvertible {
+    /// Single byte command written to the .securityCommands characteristic 0x2198
+    enum SecurityCommand: UInt8, CustomStringConvertible {
 
         // can be sent sequentially not only during the initial sensor activation
         case activate_01    = 0x01
@@ -164,9 +164,18 @@ class Libre3: Libre2 {
         }
     }
 
+    /// Written to the  .patchControl characteristic 0x1338
+    enum ControlCommand {
+        case CTRL_CMD_HISTORIC
+        case CTRL_CMD_EVENTLOG
+        case CTRL_CMD_BACKFILL
+        case CTRL_CMD_FACTORY_DATA
+        case CTRL_CMD_SHUTDOWN_PATCH
+    }
 
     var buffer: Data = Data()
-    var currentCommand: Command?
+    var currentControlCommand:  ControlCommand?
+    var currentSecurityCommand: SecurityCommand?
     var expectedStreamSize = 0
 
 
@@ -189,10 +198,10 @@ class Libre3: Libre2 {
     }
 
 
-    func send(command cmd: Command) {
+    func send(securityCommand cmd: SecurityCommand) {
         log("Bluetooth: sending to \(type) \(transmitter!.peripheral!.name!) `\(cmd.description)` command 0x\(cmd.rawValue.hex)")
-        currentCommand = cmd
-        transmitter!.write(Data([cmd.rawValue]), for: UUID.patchControl.rawValue, .withResponse)
+        currentSecurityCommand = cmd
+        transmitter!.write(Data([cmd.rawValue]), for: UUID.securityCommands.rawValue, .withResponse)
     }
 
 
@@ -231,7 +240,7 @@ class Libre3: Libre2 {
 
         switch UUID(rawValue: uuid) {
 
-        case .data_1338:
+        case .patchControl:
             if data.count == 10 {
                 let suffix = data.suffix(2).hex
                 if suffix == "0100" {
@@ -268,7 +277,7 @@ class Libre3: Libre2 {
             log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
             // TODO: the end of the stream is notified by 1338 with 10 bytes ending in 0100 for 195A, 0200 for 1AB8
 
-        case .patchControl:
+        case .securityCommands:
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
                 log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes")
@@ -285,7 +294,7 @@ class Libre3: Libre2 {
                     let (payload, hexDump) = parsePackets(buffer)
                     log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes):\n\(hexDump)")
 
-                    switch currentCommand {
+                    switch currentSecurityCommand {
 
                     case .readChallenge:
 
@@ -307,7 +316,7 @@ class Libre3: Libre2 {
                         transmitter!.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
 
                         // writing .getSessionInfo makes the Libre 3 disconnect
-                        send(command: .getSessionInfo)
+                        send(securityCommand: .getSessionInfo)
 
                     case .getSessionInfo:
                         log("\(type) \(transmitter!.peripheral!.name!): session info: \(payload.hex)")
@@ -318,7 +327,8 @@ class Libre3: Libre2 {
 
                     buffer = Data()
                     expectedStreamSize = 0
-                    currentCommand = nil
+                    currentControlCommand = nil
+                    currentSecurityCommand = nil
 
                 }
             }
