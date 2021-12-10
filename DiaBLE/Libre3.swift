@@ -14,7 +14,8 @@ class Libre3: Libre2 {
         case patchControl = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
-        case data_1482 = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
+        /// Notifies 18 bytes at connection
+        case patchStatus = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
 
         /// Notifies every minute 35 bytes as two packets of 15 + 20 bytes ending in a sequential id
         case oneMinuteReading = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
@@ -58,7 +59,7 @@ class Libre3: Libre2 {
             switch self {
             case .data:             return "data service"
             case .patchControl:     return "patch control"
-            case .data_1482:        return "data 0x1482"
+            case .patchStatus:      return "patch status"
             case .oneMinuteReading: return "one-minute reading"
             case .data_195A:        return "data 0x195A"
             case .data_1AB8:        return "data 0x1AB8"
