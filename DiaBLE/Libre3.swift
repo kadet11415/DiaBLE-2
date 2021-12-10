@@ -55,7 +55,7 @@ class Libre3: Libre2 {
         /// Writes and notifies 20-byte packets during activation and repairing a sensor
         case certificateData = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
-        // TODO: eventLog, historicData, clinicalData, 
+        // TODO: eventLog, historicData, clinicalData, factoryData
         var description: String {
             switch self {
             case .data:             return "data service"
