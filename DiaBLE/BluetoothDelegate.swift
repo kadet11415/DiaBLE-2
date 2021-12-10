@@ -254,7 +254,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                 msg += " (\(Libre3.UUID(rawValue: uuid)!.description))"
             }
 
-            if uuid == Libre3.UUID.data_1482.rawValue {
+            if uuid == Libre3.UUID.patchStatus.rawValue {
                 msg += "; avoid enabling notifications because of 'Encryption is insufficient' error"
 
             } else if uuid == Abbott.dataReadCharacteristicUUID || uuid == BluCon.dataReadCharacteristicUUID || uuid == Bubble.dataReadCharacteristicUUID || uuid == MiaoMiao.dataReadCharacteristicUUID {
