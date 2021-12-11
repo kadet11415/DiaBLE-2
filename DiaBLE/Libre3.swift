@@ -138,7 +138,7 @@ class Libre3: Libre2 {
     /// Single byte command written to the .securityCommands characteristic 0x2198
     enum SecurityCommand: UInt8, CustomStringConvertible {
 
-        // can be sent sequentially during both the initial activation and when repairing a sesnor
+        // can be sent sequentially during both the initial activation and when repairing a sensor
         case activate_01    = 0x01
         case activate_02    = 0x02
         case activate_03    = 0x03
@@ -186,6 +186,10 @@ class Libre3: Libre2 {
     func parsePatchInfo() {
         if patchInfo.count == 28 {
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
+            let wearDuration = patchInfo[8...9]
+            maxLife = Int(UInt16(wearDuration))
+            // TODO: let warmupTime = patchInfo[10] ?
+            log("Libre 3: wear duration: \(maxLife) minutes (\(maxLife.formattedInterval), 0x\(maxLife.hex))")
             // TODO: are states 03 and 07 skipped?
             // state 04 detected already after 20 minutes, 08 for a detached sensor
             // 05 lasts more than 12 hours, almost 24, before that BLE shuts down
