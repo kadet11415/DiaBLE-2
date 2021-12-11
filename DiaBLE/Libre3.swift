@@ -345,6 +345,53 @@ class Libre3: Libre2 {
 
     }
 
+
+    // MARK: - Constants
+
+
+    // Libre3.libre3DPCRLInterface
+    static let ABT_NO_ERROR = 0x0
+    static let ABT_ERR3_TIME_CHANGE = 0x2e
+    static let ABT_ERR3_SENSOR_EXPIRED = 0x33
+    static let ABT_ERR3_SENSOR_RSSI_ERROR = 0x39
+    static let ABT_ERR3_BLE_TURNED_OFF = 0x4b
+    static let ABT_ERR3_REPLACE_SENSOR_ERROR = 0x16d
+    static let ABT_ERR3_SENSOR_FALL_OUT_ERROR = 0x16e
+    static let ABT_ERR3_INCOMPATIBLE_SENSOR_TYPE_ERROR = 0x16f
+    static let ABT_ERR3_SENSOR_CAL_CODE_ERROR = 0x170
+    static let ABT_ERR3_SENSOR_DYNAMIC_DATA_CRC_ERROR = 0x171
+    static let ABT_ERR3_SENSOR_FACTORY_DATA_CRC_ERROR = 0x172
+    static let ABT_ERR3_SENSOR_LOG_DATA_CRC_ERROR = 0x173
+    static let ABT_ERR3_SENSOR_NOT_YOURS_ERROR = 0x174
+    static let ABT_ERR3_REALTIME_RESULT_DQ_ERROR = 0x175
+    static let ABT_ERR3_SENSOR_ESA_DETECTED = 0x17c
+    static let ABT_ERR3_SENSOR_NOT_IN_GLUCOSE_MEASUREMENT_STATE = 0x181
+    static let ABT_ERR3_BLE_PACKET_ERROR = 0x182
+    static let ABT_ERR3_INVALID_DATA_SIZE_ERROR = 0x183
+    static let ABT_ERR9_LIB_NOT_INITIALIZED_ERROR = 0x3d6
+    static let ABT_ERR9_MEMORY_SIZE_ERROR = 0x3d7
+    static let ABT_ERR9_NV_MEMORY_CRC_ERROR = 0x3da
+    static let ABT_ERROR_DATA_BYTES = 0x8
+    static let LIBRE3_DP_LIBRARY_PARSE_ERROR = ~0x0
+    static let NFC_ACTIVATION_COMMAND_PAYLOAD_SIZE = 0xa
+    static let PATCH_CONTROL_BACKFILL_GREATER_SIZE = 0xb
+    static let ABT_HISTORICAL_POINTS_PER_NOTIFICATION = 0x6
+    static let LIB3_RECORD_ORDER_NEWEST_TO_OLDEST = 0x0
+    static let LIB3_RECORD_ORDER_OLDEST_TO_NEWEST = 0x1
+    static let PATCH_CONTROL_COMMAND_SIZE = 0x7
+    static let PATCH_NFC_EVENT_LOG_NUM_EVENTS = 0x3
+    static let ABT_EVENT_LOGS_PER_NOTIFICATION = 0x2
+    static let ABT_ERR10_INVALID_USER = 0x582
+    static let ABT_ERR10_DUPLICATE_USER = 0x596
+    static let ABT_ERR10_INVALID_TOKEN = 0x5a6
+    static let ABT_ERR10_INVALID_DEVICE = 0x5aa
+    static let ABT_ERR0_BLE_TURNED_OFF = 0x1f7
+    static let SCRATCH_PAD_BUFFER_SIZE = 0x400
+    static let CRL_NV_MEMORY_SIZE = 0x400
+    static let LIBRE3_DEFAULT_WARMUP_TIME = 0x3c
+    static let MAX_SERIAL_NUMBER_SIZE = 0xf
+
+
 }
 
 
