@@ -166,13 +166,13 @@ class Libre3: Libre2 {
         }
     }
 
-    /// Written to the  .patchControl characteristic 0x1338
+    /// 13 bytes written to the  .patchControl characteristic 0x1338
     enum ControlCommand {
-        case CTRL_CMD_HISTORIC
-        case CTRL_CMD_EVENTLOG
-        case CTRL_CMD_BACKFILL
-        case CTRL_CMD_FACTORY_DATA
-        case CTRL_CMD_SHUTDOWN_PATCH
+        case CTRL_CMD_HISTORIC(Data)
+        case CTRL_CMD_EVENTLOG(Data)
+        case CTRL_CMD_BACKFILL(Data)
+        case CTRL_CMD_FACTORY_DATA(Data)
+        case CTRL_CMD_SHUTDOWN_PATCH(Data)
     }
 
     var buffer: Data = Data()

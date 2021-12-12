@@ -56,6 +56,8 @@
 		C59FE28D26AFD7A600F7F18F /* NFCTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FE28B26AFD7A600F7F18F /* NFCTools.swift */; };
 		C5A1B8B023C6410A00D60962 /* Bluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1B8AF23C6410A00D60962 /* Bluetooth.swift */; };
 		C5A5797023A2CF0700945F72 /* Sensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A5796F23A2CF0700945F72 /* Sensor.swift */; };
+		C5AAE9FE2765E4BC00546CE1 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = C5AAE9FD2765E4BC00546CE1 /* LICENSE */; };
+		C5AAE9FF2765E4BC00546CE1 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = C5AAE9FD2765E4BC00546CE1 /* LICENSE */; };
 		C5ADAF3F245B4CCF003A2E8B /* BluetoothDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADAF3E245B4CCF003A2E8B /* BluetoothDelegate.swift */; };
 		C5ADAF40245B4CCF003A2E8B /* BluetoothDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADAF3E245B4CCF003A2E8B /* BluetoothDelegate.swift */; };
 		C5ADAF42245B4E56003A2E8B /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADAF41245B4E56003A2E8B /* Device.swift */; };
@@ -185,6 +187,7 @@
 		C59FE28B26AFD7A600F7F18F /* NFCTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCTools.swift; sourceTree = "<group>"; };
 		C5A1B8AF23C6410A00D60962 /* Bluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bluetooth.swift; sourceTree = "<group>"; };
 		C5A5796F23A2CF0700945F72 /* Sensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensor.swift; sourceTree = "<group>"; };
+		C5AAE9FD2765E4BC00546CE1 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		C5ADAF3E245B4CCF003A2E8B /* BluetoothDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDelegate.swift; sourceTree = "<group>"; };
 		C5ADAF41245B4E56003A2E8B /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		C5AE0C312746F21200B3F6B9 /* Libre3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libre3.swift; sourceTree = "<group>"; };
@@ -329,6 +332,7 @@
 			children = (
 				C5DC03902667679700C499DC /* README.md */,
 				C5B7AC6D270ADF2100EB1F87 /* TODO.md */,
+				C5AAE9FD2765E4BC00546CE1 /* LICENSE */,
 				C5E1013823A2774C00678DF6 /* DiaBLE */,
 				C58507AB23C50BF40079539D /* DiaBLE Watch Extension */,
 				C585079C23C50BF20079539D /* DiaBLE Watch */,
@@ -520,6 +524,7 @@
 				C52F1A5F24975F12004C2F90 /* company_ids.json in Resources */,
 				C5E9C7612444969800D52B32 /* alarm_signal_loss.mp3 in Resources */,
 				C58507B923C50BF40079539D /* Assets.xcassets in Resources */,
+				C5AAE9FF2765E4BC00546CE1 /* LICENSE in Resources */,
 				C52BDADE275E2B4E001D3872 /* README.md in Resources */,
 				C5E9C75F2444969000D52B32 /* alarm_high.mp3 in Resources */,
 			);
@@ -535,6 +540,7 @@
 				C5DC03912667679700C499DC /* README.md in Resources */,
 				C5B7AC6E270ADF2100EB1F87 /* TODO.md in Resources */,
 				C5908FB82428E6B600CF6C83 /* alarm_signal_loss.mp3 in Resources */,
+				C5AAE9FE2765E4BC00546CE1 /* LICENSE in Resources */,
 				C5E1014323A2774D00678DF6 /* Assets.xcassets in Resources */,
 				C52F1A5E24975F12004C2F90 /* company_ids.json in Resources */,
 			);
