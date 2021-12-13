@@ -2,7 +2,7 @@
 
 <br><br>
 
-Since the FreeStyle **Libre 2 / 3** glucose sensors are Bluetooth Low Energy devices, I am trying to leverage their capabilities to implement something new compared to the traditional apps:
+Since the latest **FreeStyle Libre glucose sensors** are **B**luetooth **L**ow **E**nergy devices, I am trying to leverage their capabilities to implement something new compared to the traditional apps:
 
 * a universal **SwiftUI** application for iPhone, iPad and Mac Catalyst;
 * an **independent Apple Watch app** connecting directly via Bluetooth;
