@@ -21,12 +21,12 @@ class Libre3: Libre2 {
         case oneMinuteReading = "0898177A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies a first stream of recent data while the curve is drawn on display
-        case data_195A = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case historicalData = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies a second longer stream of past data
         case data_1AB8 = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        /// Notifies 20 + 20 bytes towards the end of activation (session info)
+        /// Notifies 20 + 20 bytes towards the end of activation
         case data_1BEE = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies the final stream of data during activation
@@ -62,7 +62,7 @@ class Libre3: Libre2 {
             case .patchControl:     return "patch control"
             case .patchStatus:      return "patch status"
             case .oneMinuteReading: return "one-minute reading"
-            case .data_195A:        return "data 0x195A"
+            case .historicalData:   return "historical data"
             case .data_1AB8:        return "data 0x1AB8"
             case .data_1BEE:        return "data 0x1BEE"
             case .data_1D24:        return "data 0x1D24"
@@ -92,7 +92,7 @@ class Libre3: Libre2 {
     // notify 2198  08 43
     // notify 22CE  20 * 3 + 11 bytes   // 67-byte session info
     // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
-    // notify 1482  18 bytes
+    // notify 1482  18 bytes            // patch status
     // enable notifications for 177A
     // write  1338  13 bytes
     // notify 177A  15 + 20 bytes       // one-minute reading
@@ -125,7 +125,7 @@ class Libre3: Libre2 {
     // notify 2198  08 43
     // notify 22CE  20 * 3 + 11 bytes   // 67-byte session info
     // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
-    // notify 1482  18 bytes
+    // notify 1482  18 bytes            // patch status
     // enable notifications for 177A
     // write  1338  13 bytes
     // notify 1BBE  20 + 20 bytes
@@ -273,7 +273,7 @@ class Libre3: Libre2 {
                 }
             }
 
-        case .data_195A, .data_1AB8:
+        case .historicalData, .data_1AB8:
             if buffer.count == 0 {
                 buffer = Data(data)
             } else {
