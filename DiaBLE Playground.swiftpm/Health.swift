@@ -21,14 +21,19 @@ class HealthKit: Logging {
     }
 
     func authorize(_ handler: @escaping (Bool) -> Void) {
-        guard let glucoseQuantity = HKQuantityType.quantityType(forIdentifier: .bloodGlucose),
-            let insulingDelivery = HKQuantityType.quantityType(forIdentifier: .insulinDelivery) else {
-                handler(false)
-                return
-        }
-        store?.requestAuthorization(toShare: [glucoseQuantity, insulingDelivery], read: [glucoseQuantity, insulingDelivery], completion: { success, error in
-            handler(success)
-        })
+
+        // FIXME: Playground: 'NSHealthUpdateUsageDescription must be set in the app's
+        // Info.plist in order to request write authorization for the following types:
+        // HKQuantityTypeIdentifierBloodGlucose, HKQuantityTypeIdentifierInsulinDelivery'
+
+        // guard let glucoseQuantity = HKQuantityType.quantityType(forIdentifier: .bloodGlucose),
+        //     let insulingDelivery = HKQuantityType.quantityType(forIdentifier: .insulinDelivery) else {
+        handler(false)
+        return
+        // }
+        // store?.requestAuthorization(toShare: [glucoseQuantity, insulingDelivery], read: [glucoseQuantity, insulingDelivery], completion: { success, error in
+        //     handler(success)
+        // })
     }
 
     var isAuthorized: Bool {
