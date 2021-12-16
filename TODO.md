@@ -5,7 +5,9 @@ FIXME
   - *"NFC scan success sheet displayed when NFC scan time out"* (https://developer.apple.com/forums/thread/687264)
 * Xcode 13:
   - *"No 'async' operations occur within 'await' expression"* warnings
-* Catalyst:
+* Playgrounds 4:
+  - missing entitlements for HealthKit, NFC and Bluetooth background mode 
+* Mac Catalyst:
   - log bogging down too early
 * @Published classes nonsense
 * the new Libre2() subclass is not instantiated specifically in Transmitters
