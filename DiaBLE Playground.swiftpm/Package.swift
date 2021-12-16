@@ -33,7 +33,8 @@ let package = Package(
                 .portraitUpsideDown(.when(deviceFamilies: [.pad]))
             ],
             capabilities: [
-                .bluetoothAlways(purposeString: "Unknown Usage Description")
+                .bluetoothAlways(purposeString: "DiaBLE uses Bluetooth to receive glucose data and alarms from several transmitters and Libre sensors"),
+                .calendars(purposeString: "DiaBLE creates events to be displayed in Apple Watch complications.")
             ]
         )
     ],

@@ -32,7 +32,7 @@
 		<true/>
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>DiaBLE uses Bluetooth to receive glucose data and alarms from several transmitters and Libre 2 sensors.</string>
+	<string>DiaBLE uses Bluetooth to receive glucose data and alarms from several transmitters and Libre sensors</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>DiaBLE creates events to be displayed in Apple Watch complications</string>
 	<key>NSHealthShareUsageDescription</key>
