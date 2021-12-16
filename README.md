@@ -16,8 +16,12 @@ Still too early to decide the final design (but I really like already the evil l
 
 <br><br>
 <p align="center"><img src="https://pbs.twimg.com/media/FAmZtdjXsAIp1u_?format=jpg" width="25%" align="middle" />&nbsp;&nbsp;<img src="https://pbs.twimg.com/media/FAmZvT_WUAA8YNq?format=png" width="12.5%" align="middle" /></p>
-
 <h4 align ="center">Hello Libre 3</h4>
+
+<br><br>
+
+<p align="center"><img src="https://pbs.twimg.com/media/FGvFqVdVIAM9QK3?format=jpg" width="75%" align="middle" /></p>
+<h4 align ="center">Ready to Play? 4:0 for now</h4>
 <br><br>
 
 
@@ -35,4 +39,3 @@ Please refer to the [**TODOs**](https://github.com/gui-dos/DiaBLE/blob/master/TO
 ***Special thanks to***: [Ambrosia](https://www.ambrosiasys.com), [@JtxGit](https://github.com/JtxGit), [@monder](https://github.com/monder), [Vic Wu](https://github.com/birdfly).
 
 ###### ***Disclaimer: the decrypting keys I am publishing are not related to user accounts and can be dumped from the sensor memory by using DiaBLE itself. The online servers I am using probably are tracking your personal data but all the traffic sent/received by DiaBLE is clearly shown in its logs. The reversed code I am pasting has been retrieved from other GitHub repos or reproduced simply by using open-source tools like `jadx-gui`.***
-
