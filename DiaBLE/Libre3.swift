@@ -1,7 +1,7 @@
 import Foundation
 
 
-class Libre3: Libre2 {
+class Libre3: Sensor {
 
 
     enum UUID: String, CustomStringConvertible, CaseIterable {

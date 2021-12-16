@@ -196,7 +196,6 @@ struct Console: View {
         } message: {
             Text("This device doesn't allow scanning the Libre.")
         }
-        // FIXME: commenting out the destructive actions make the NFC alert be shown again
         .confirmationDialog("Unlocking the Libre 2 is not reversible and will make it unreadable by LibreLink and other apps.", isPresented: $showingUnlockConfirmationDialog, titleVisibility: .visible) {
             Button("Unlock", role: .destructive) {
                 app.main.nfc.taskRequest = .unlock

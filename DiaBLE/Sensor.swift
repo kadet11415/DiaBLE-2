@@ -169,18 +169,6 @@ func writeBits(_ buffer: Data, _ byteOffset: Int, _ bitOffset: Int, _ bitCount: 
 }
 
 
-struct CalibrationInfo: Codable, Equatable {
-    var i1: Int = 0
-    var i2: Int = 0
-    var i3: Int = 0
-    var i4: Int = 0
-    var i5: Int = 0
-    var i6: Int = 0
-
-    static var empty = CalibrationInfo()
-}
-
-
 class Sensor: ObservableObject, Logging {
 
     var type: SensorType = .unknown
