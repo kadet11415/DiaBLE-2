@@ -11,6 +11,8 @@ class Libre3: Sensor {
 
         /// Requests data by writing 13 bytes ending in 0100 for recent data (195A), 0200 for past data (1AB8)
         /// Notifies 10 bytes at the end of stream ending in 0100 for 195A, 0200 for 1AB8
+        /// When shutting down a sensor writes two commands made by 13 bytes
+        ///   ending in 0300 (1BEE notifies 20 bytes ending in 0100) and 0400
         case patchControl = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
@@ -27,6 +29,7 @@ class Libre3: Sensor {
         case data_1AB8 = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies 20 + 20 bytes towards the end of activation
+        /// Notifies 20 bytes ending in 0100 when shutting down a sensor (control command ending in 0300)
         case data_1BEE = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies the final stream of data during activation
@@ -94,13 +97,13 @@ class Libre3: Sensor {
     // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
     // notify 1482  18 bytes            // patch status
     // enable notifications for 177A
-    // write  1338  13 bytes
+    // write  1338  13 bytes            // ending in 01 00
     // notify 177A  15 + 20 bytes       // one-minute reading
     // notify 195A  20-byte packets of recent data
-    // notify 1338  10 bytes
-    // write  1338  13 bytes
+    // notify 1338  10 bytes            // ending in 01 00
+    // write  1338  13 bytes            // ending in 02 00
     // notify 1AB8  20-byte packets of past data
-    // notify 1338  10 byte
+    // notify 1338  10 byte             // ending in 02 00
     //
     // Activation:
     // enable notifications for 2198, 23FA and 22CE
@@ -133,6 +136,12 @@ class Libre3: Sensor {
     // write  1338  13 bytes
     // notify 1D24  20 * 10 + 15 bytes
     // notify 1338  10 bytes
+    //
+    // Shutdown:
+    //
+    // write  1338  13 bytes            // ending in 03 00
+    // notify 1BBE  20 bytes            // ending in 01 00
+    // write  1338  13 bytes            // ending in 04 00
 
 
     /// Single byte command written to the .securityCommands characteristic 0x2198
@@ -169,11 +178,11 @@ class Libre3: Sensor {
     /// 13 bytes written to the .patchControl characteristic 0x1338
     /// PATCH_CONTROL_COMMAND_SIZE = 7
     enum ControlCommand {
-        case CTRL_CMD_HISTORIC(Data)        // 1
+        case CTRL_CMD_HISTORIC(Data)        // 1 (data ending in 01 00)
         case CTRL_CMD_EVENTLOG(Data)        // 3
         case CTRL_CMD_BACKFILL(Data)        // 2
         case CTRL_CMD_FACTORY_DATA(Data)    // 4
-        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5
+        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5 (data ending in 03 00)
     }
 
     var buffer: Data = Data()
