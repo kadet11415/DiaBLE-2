@@ -3,6 +3,8 @@ import HealthKit
 
 // https://github.com/gshaviv/ninety-two/blob/master/WoofWoof/HealthKitManager.swift
 
+// TODO: async / await, Observers
+
 class HealthKit: Logging {
 
     class var isAvailable: Bool { HKHealthStore.isHealthDataAvailable() }

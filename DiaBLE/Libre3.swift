@@ -30,6 +30,7 @@ class Libre3: Sensor {
 
         /// Notifies 20 + 20 bytes towards the end of activation
         /// Notifies 20 bytes ending in 0100 when shutting down a sensor (control command ending in 0300)
+        /// and at the first connection after activation
         case data_1BEE = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies the final stream of data during activation
@@ -181,7 +182,7 @@ class Libre3: Sensor {
         case CTRL_CMD_EVENTLOG(Data)        // 3
         case CTRL_CMD_BACKFILL(Data)        // 2
         case CTRL_CMD_FACTORY_DATA(Data)    // 4
-        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5 (data ending in 03 00 -- or 04 00?)
+        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5 (data ending in 04 00)
     }
 
     var buffer: Data = Data()

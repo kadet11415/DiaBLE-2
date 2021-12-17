@@ -22,8 +22,7 @@ TODO
 * Libre 3 / Gen2:
   - native and/or online en/decoding
 * scrollable graph, offline trend arrow, landcape mode, realtime RSSI
-* smoothing the historic values and projecting the trend ones
-* come back to an iPad Swift Playgrounds 4 app (no NFC)
+* smooth the historic values and project the trend ones (see [LibreTransmitter](https://github.com/dabear/LibreTransmitter/commit/49b50d7995955b76861440e5e34a0accd064d18f))
 * log: limit to a number of readings, autoscroll to bottom, prepend time, Share menu, record to a file, add Logger support
 * HealthKit, Nightscout: more than just a few ported dozen lines of code
 * profile and avoid retain cycles
