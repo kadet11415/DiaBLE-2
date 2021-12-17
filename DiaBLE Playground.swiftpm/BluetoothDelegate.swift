@@ -41,7 +41,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         let dataServiceUUIDs = advertisement[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID]
 
         if let dataServiceUUIDs = dataServiceUUIDs, dataServiceUUIDs.count > 0, dataServiceUUIDs[0].uuidString == Libre3.UUID.data.rawValue {
-            name = "ABBOTT\(name ?? "unnamedLibre")"    // Libre 3 device name is 12 chars long
+            name = "ABBOTT\(name ?? "unnamedLibre")"    // Libre 3 device name is 12 chars long (hexadecimal MAC address)
         }
 
         var didFindATransmitter = false
@@ -105,9 +105,10 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
         if name!.lowercased().hasPrefix("abbott") {
             app.transmitter = Abbott(peripheral: peripheral, main: main)
             app.device = app.transmitter
-            if name!.count == 18 { // fictitious "ABBOTT" + Libre 3 real device name
+            if name!.count == 18 { // fictitious "ABBOTT" + Libre 3 hexedecimal MAC address
                 app.device.name = "Libre 3"
                 name = String(name!.suffix(12))
+                app.device.macAddress = Data(name!.bytes)
                 (app.transmitter as! Abbott).securityGeneration = 3
                 app.lastReadingDate = Date() // TODO
             } else {
@@ -358,8 +359,8 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                 sensor.calibrationInfo = settings.activeSensorCalibrationInfo
                 sensor.maxLife = settings.activeSensorMaxLife
                 log("Bluetooth: the active sensor \(app.device.serial) has reconnected: restoring settings: initial patch info: \(sensor.initialPatchInfo.hex), current patch info: \(sensor.patchInfo.hex), unlock count: \(sensor.streamingUnlockCount)")
+                app.device.macAddress = settings.activeSensorAddress
             }
-            app.device.macAddress = settings.activeSensorAddress
 
             // TODO: Libre 3
             if serviceUUID == Libre3.UUID.secondary.rawValue {

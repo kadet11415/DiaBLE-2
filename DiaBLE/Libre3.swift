@@ -131,12 +131,12 @@ class Libre3: Sensor {
     // enable notifications for 1338, 1BEE, 195A, 1AB8, 1D24, 1482
     // notify 1482  18 bytes            // patch status
     // enable notifications for 177A
-    // write  1338  13 bytes
-    // notify 1BBE  20 + 20 bytes
-    // notify 1338  10 bytes
-    // write  1338  13 bytes
+    // write  1338  13 bytes           // ending in 01 00
+    // notify 1BBE  20 + 20 bytes      // ending in 01 00
+    // notify 1338  10 bytes           // ending in 01 00
+    // write  1338  13 bytes           // ending in 02 00
     // notify 1D24  20 * 10 + 15 bytes
-    // notify 1338  10 bytes
+    // notify 1338  10 bytes           // ending in 02 00
     //
     // Shutdown:
     // write  1338  13 bytes            // ending in 03 00
