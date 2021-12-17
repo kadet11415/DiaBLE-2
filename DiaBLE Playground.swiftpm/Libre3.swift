@@ -138,7 +138,6 @@ class Libre3: Sensor {
     // notify 1338  10 bytes
     //
     // Shutdown:
-    //
     // write  1338  13 bytes            // ending in 03 00
     // notify 1BBE  20 bytes            // ending in 01 00
     // write  1338  13 bytes            // ending in 04 00
@@ -182,7 +181,7 @@ class Libre3: Sensor {
         case CTRL_CMD_EVENTLOG(Data)        // 3
         case CTRL_CMD_BACKFILL(Data)        // 2
         case CTRL_CMD_FACTORY_DATA(Data)    // 4
-        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5 (data ending in 03 00)
+        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5 (data ending in 03 00 -- or 04 00?)
     }
 
     var buffer: Data = Data()
@@ -198,10 +197,10 @@ class Libre3: Sensor {
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
             let wearDuration = patchInfo[8...9]
             maxLife = Int(UInt16(wearDuration))
-            // TODO: let warmupTime = patchInfo[10] ?
+            // TODO: let warmupTime = patchInfo[10] (0x1E) or patchInfo[11] (0x0F) ?
             log("Libre 3: wear duration: \(maxLife) minutes (\(maxLife.formattedInterval), 0x\(maxLife.hex))")
             // TODO: are states 03 and 07 skipped?
-            // state 04 detected already after 20 minutes, 08 for a detached sensor
+            // state 04 detected already after 15 minutes, 08 for a detached sensor
             // 05 lasts more than 12 hours, almost 24, before that BLE shuts down
             let sensorState = patchInfo[16]
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
