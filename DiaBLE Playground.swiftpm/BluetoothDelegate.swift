@@ -108,7 +108,9 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             if name!.count == 18 { // fictitious "ABBOTT" + Libre 3 hexadecimal MAC address
                 app.device.name = "Libre 3"
                 name = String(name!.suffix(12))
-                app.device.macAddress = name!.bytes
+                if name != "unnamedLibre" {
+                    app.device.macAddress = name!.bytes
+                }
                 (app.transmitter as! Abbott).securityGeneration = 3
                 app.lastReadingDate = Date() // TODO
             } else {
