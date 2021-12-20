@@ -87,7 +87,7 @@ class Libre3: Sensor {
         case certificateData = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // TODO:
-        case bleLogin        = "F001"
+        case bleLogin = "F001"
 
         var description: String {
             switch self {
@@ -388,6 +388,20 @@ class Libre3: Sensor {
 
 
     // MARK: - Constants
+
+
+    // Android MSLibre3Constants
+    static let LIBRE3_HISTORIC_LIFECOUNT_INTERVAL = 5
+    static let LIBRE3_MAX_HISTORIC_READING_IN_PACKET = 10
+    static let HISTORIC_POINT_LATENCY = 17
+    static let LIBRE3_DQERROR_MAX = 0xFFFF
+    static let LIBRE3_DQERROR_DQ              = 0x8000  // 32768
+    static let LIBRE3_DQERROR_SENSOR_TOO_HOT  = 0xA000  // 40960
+    static let LIBRE3_DQERROR_SENSOR_TOO_COLD = 0xC000  // 49152
+    static let LIBRE3_DQERROR_OUTLIER_FILTER_DELTA = 2
+    static let LIBRE3_SENSOR_CONDITION_OK = 0
+    static let LIBRE3_SENSOR_CONDITION_INVALID = 1
+    static let LIBRE3_SENSOR_CONDITION_ESA_CHECK = 2
 
 
     // Libre3.libre3DPCRLInterface
