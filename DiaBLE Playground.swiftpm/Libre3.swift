@@ -9,10 +9,10 @@ class Libre3: Sensor {
         /// Advertised primary data service
         case data = "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
 
-        /// Requests data by writing 13 bytes ending in 0100 for recent data (195A), 0200 for past data (1AB8)
-        /// Notifies 10 bytes at the end of stream ending in 0100 for 195A, 0200 for 1AB8
-        /// When shutting down a sensor writes two commands made by 13 bytes
-        ///   ending in 0300 (1BEE notifies 20 bytes ending in 0100) and 0400
+        /// Requests data by writing 13 bytes embedding a "patch control command" (7 bytes?)
+        /// end a final sequential Int (starting by 01 00) referring their queue
+        /// Notifies at the end of the data stream 10 bytes ending in the enqueued id
+        /// (for example 0100 and 0200 when receiving recent and past data on 195A and 1AB8)
         case patchControl = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
@@ -29,7 +29,7 @@ class Libre3: Sensor {
         case data_1AB8 = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies 20 + 20 bytes towards the end of activation
-        /// Notifies 20 bytes ending in 0100 when shutting down a sensor (control command ending in 0300)
+        /// Notifies 20 bytes when shutting down a sensor (CTRL_CMD_SHUTDOWN_PATCH)
         /// and at the first connection after activation
         case data_1BEE = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
@@ -175,14 +175,15 @@ class Libre3: Sensor {
         }
     }
 
-    /// 13 bytes written to the .patchControl characteristic 0x1338
-    /// PATCH_CONTROL_COMMAND_SIZE = 7
+    /// 13 bytes written to the .patchControl characteristic 0x1338:
+    /// - PATCH_CONTROL_COMMAND_SIZE = 7
+    /// - a final sequential Int starting by 01 00 and referring their queue
     enum ControlCommand {
-        case CTRL_CMD_HISTORIC(Data)        // 1 (data ending in 01 00)
+        case CTRL_CMD_HISTORIC(Data)        // 1
         case CTRL_CMD_EVENTLOG(Data)        // 3
         case CTRL_CMD_BACKFILL(Data)        // 2
         case CTRL_CMD_FACTORY_DATA(Data)    // 4
-        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5 (data ending in 04 00)
+        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5
     }
 
     var buffer: Data = Data()
