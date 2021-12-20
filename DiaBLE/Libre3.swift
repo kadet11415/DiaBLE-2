@@ -4,6 +4,33 @@ import Foundation
 class Libre3: Sensor {
 
 
+    enum State: UInt8, CustomStringConvertible {
+        case manufacturing      = 0x00    // PATCH_STATE_MANUFACTURING
+        case storage            = 0x01    // PATCH_STATE_STORAGE
+        case insertionDetection = 0x02    // PATCH_STATE_INSERTION_DETECTION
+        case insertionFailed    = 0x03    // PATCH_STATE_INSERTION_FAILED
+        case paired             = 0x04    // PATCH_STATE_PAIRED
+        case expired            = 0x05    // PATCH_STATE_EXPIRED
+        case terminated         = 0x06    // PATCH_STATE_TERMINATED_NORMAL
+        case error              = 0x07    // PATCH_STATE_ERROR
+        case errorTerminated    = 0x08    // PATCH_STATE_ERROR_TERMINATED
+
+        var description: String {
+            switch self {
+            case .manufacturing:      return "Manufacturing"
+            case .storage:            return "Not Activated"
+            case .insertionDetection: return "Insertion detection"
+            case .insertionFailed:    return "Insertion failed"
+            case .paired:             return "Paired"
+            case .expired:            return "Expired"
+            case .terminated:         return "Terminated"
+            case .error:              return "Error"
+            case .errorTerminated:    return "Terminated (error)"
+            }
+        }
+    }
+
+
     enum UUID: String, CustomStringConvertible, CaseIterable {
 
         /// Advertised primary data service
@@ -200,12 +227,12 @@ class Libre3: Sensor {
             maxLife = Int(UInt16(wearDuration))
             // TODO: let warmupTime = patchInfo[10] (0x1E) or patchInfo[11] (0x0F) ?
             log("Libre 3: wear duration: \(maxLife) minutes (\(maxLife.formattedInterval), 0x\(maxLife.hex))")
-            // TODO: are states 03 and 07 skipped?
             // state 04 detected already after 15 minutes, 08 for a detached sensor
             // 05 lasts more than 12 hours, almost 24, before that BLE shuts down
             let sensorState = patchInfo[16]
+            // TODO: manage specific Libre 3 states
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
-            log("Libre 3: state: \(state.description.lowercased()) (0x\(sensorState.hex))")
+            log("Libre 3: specific state: \(State(rawValue: sensorState)!.description.lowercased()) (0x\(sensorState.hex)), state: \(state.description.lowercased()) ")
             let serialNumber = Data(patchInfo[17...25])
             serial = serialNumber.string
             log("Libre 3: serial number: \(serialNumber.string) (0x\(serialNumber.hex))")
