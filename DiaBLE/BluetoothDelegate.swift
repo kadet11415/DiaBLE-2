@@ -219,7 +219,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
                 if serviceUUID == type(of: app.device).dataServiceUUID {
                     description = "data service"
                 }
-                if [Libre3.UUID.data.rawValue, Libre3.UUID.secondary.rawValue].contains(serviceUUID) {
+                if [Libre3.UUID.data.rawValue, Libre3.UUID.security.rawValue].contains(serviceUUID) {
                     description = Libre3.UUID(rawValue: serviceUUID)!.description
                 }
                 if let uuid = BLE.UUID(rawValue: serviceUUID) {
@@ -319,7 +319,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
 
         }
 
-        if app.device.type == .transmitter(.abbott) && (serviceUUID == Abbott.dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue || serviceUUID == Libre3.UUID.secondary.rawValue) {
+        if app.device.type == .transmitter(.abbott) && (serviceUUID == Abbott.dataServiceUUID || serviceUUID == Libre3.UUID.data.rawValue || serviceUUID == Libre3.UUID.security.rawValue) {
             var sensor: Sensor! = app.sensor
             if app.sensor == nil || app.sensor.transmitter?.type != app.device.type {
                 if serviceUUID == Libre3.UUID.data.rawValue {
@@ -365,7 +365,7 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             }
 
             // TODO: Libre 3
-            if serviceUUID == Libre3.UUID.secondary.rawValue {
+            if serviceUUID == Libre3.UUID.security.rawValue {
                 if sensor.transmitter == nil { sensor.transmitter = app.transmitter }
                 ((app.device as? Abbott)?.sensor as? Libre3)?.send(securityCommand: .readChallenge)
 

@@ -26,7 +26,7 @@ class Libre3: Sensor {
         case historicalData = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies a second longer stream of past data
-        case data_1AB8 = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case clinicalData = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies 20 + 20 bytes towards the end of activation
         /// Notifies 20 bytes when shutting down a sensor (CTRL_CMD_SHUTDOWN_PATCH)
@@ -36,8 +36,8 @@ class Libre3: Sensor {
         /// Notifies the final stream of data during activation
         case data_1D24 = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        /// Secondary service
-        case secondary = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
+        /// Security service
+        case security = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Writes a single byte command, may notify in the second byte the effective length of the returned stripped stream
         /// 01: very first command when activating a sensor
@@ -59,7 +59,7 @@ class Libre3: Sensor {
         /// Writes and notifies 20-byte packets during activation and repairing a sensor
         case certificateData = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
-        // TODO: eventLog, historicData, clinicalData, factoryData
+        // TODO: factoryData, eventLog
         var description: String {
             switch self {
             case .data:             return "data service"
@@ -67,10 +67,10 @@ class Libre3: Sensor {
             case .patchStatus:      return "patch status"
             case .oneMinuteReading: return "one-minute reading"
             case .historicalData:   return "historical data"
-            case .data_1AB8:        return "data 0x1AB8"
+            case .clinicalData:     return "clinical data"
             case .data_1BEE:        return "data 0x1BEE"
             case .data_1D24:        return "data 0x1D24"
-            case .secondary:        return "secondary service"
+            case .security:         return "security service"
             case .securityCommands: return "security commands"
             case .challengeData:    return "challenge data"
             case .certificateData:  return "certificate data"
@@ -283,7 +283,7 @@ class Libre3: Sensor {
                 }
             }
 
-        case .historicalData, .data_1AB8:
+        case .historicalData, .clinicalData:
             if buffer.count == 0 {
                 buffer = Data(data)
             } else {
