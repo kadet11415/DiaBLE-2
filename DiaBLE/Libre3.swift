@@ -84,7 +84,7 @@ class Libre3: Sensor {
     // maximum packet size is 20
     // notified packets are prefixed by 00, 01, 02, ...
     // written packets are prefixed by 00 00, 12 00, 24 00, 36 00, ...
-    // data packets end in a progresssive "life count" Int: 01 00, 02 00, ...
+    // data packets end in a sequential Int: 01 00, 02 00, ...
     //
     // Connection:
     // enable notifications for 2198, 23FA and 22CE
@@ -100,10 +100,10 @@ class Libre3: Sensor {
     // enable notifications for 177A
     // write  1338  13 bytes            // ending in 01 00
     // notify 177A  15 + 20 bytes       // one-minute reading
-    // notify 195A  20-byte packets of recent data ending in a progresssive "life count" Int
+    // notify 195A  20-byte packets of recent data ending in a sequential Int
     // notify 1338  10 bytes            // ending in 01 00
     // write  1338  13 bytes            // ending in 02 00
-    // notify 1AB8  20-byte packets of past data ending in a progresssive "life count" Int
+    // notify 1AB8  20-byte packets of past data ending in a sequential Int
     // notify 1338  10 byte             // ending in 02 00
     //
     // Activation:
