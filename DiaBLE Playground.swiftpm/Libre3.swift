@@ -10,9 +10,9 @@ class Libre3: Sensor {
         case data = "089810CC-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Requests data by writing 13 bytes embedding a "patch control command" (7 bytes?)
-        /// end a final sequential Int (starting by 01 00) referring their queue
+        /// and a final sequential Int (starting by 01 00) since it is enqueued
         /// Notifies at the end of the data stream 10 bytes ending in the enqueued id
-        /// (for example 0100 and 0200 when receiving recent and past data on 195A and 1AB8)
+        /// (for example 01 00 and 02 00 when receiving recent and past data on 195A and 1AB8)
         case patchControl = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // Receiving "Encryption is insufficient" error when activating notifications
@@ -177,7 +177,7 @@ class Libre3: Sensor {
 
     /// 13 bytes written to the .patchControl characteristic 0x1338:
     /// - PATCH_CONTROL_COMMAND_SIZE = 7
-    /// - a final sequential Int starting by 01 00 and referring their queue
+    /// - a final sequential Int starting by 01 00 since it is enqueued
     enum ControlCommand {
         case CTRL_CMD_HISTORIC(Data)        // 1
         case CTRL_CMD_EVENTLOG(Data)        // 3
