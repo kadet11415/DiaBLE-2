@@ -31,10 +31,10 @@ class Libre3: Sensor {
         /// Notifies 20 + 20 bytes towards the end of activation
         /// Notifies 20 bytes when shutting down a sensor (CTRL_CMD_SHUTDOWN_PATCH)
         /// and at the first connection after activation
-        case data_1BEE = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case eventLog = "08981BEE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies the final stream of data during activation
-        case data_1D24 = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
+        case factoryData = "08981D24-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Security service
         case security = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
@@ -59,7 +59,6 @@ class Libre3: Sensor {
         /// Writes and notifies 20-byte packets during activation and repairing a sensor
         case certificateData = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
-        // TODO: factoryData, eventLog
         var description: String {
             switch self {
             case .data:             return "data service"
@@ -68,8 +67,8 @@ class Libre3: Sensor {
             case .oneMinuteReading: return "one-minute reading"
             case .historicalData:   return "historical data"
             case .clinicalData:     return "clinical data"
-            case .data_1BEE:        return "data 0x1BEE"
-            case .data_1D24:        return "data 0x1D24"
+            case .eventLog:         return "event log"
+            case .factoryData:      return "factory data"
             case .security:         return "security service"
             case .securityCommands: return "security commands"
             case .challengeData:    return "challenge data"
@@ -132,7 +131,7 @@ class Libre3: Sensor {
     // notify 1482  18 bytes            // patch status
     // enable notifications for 177A
     // write  1338  13 bytes            // ending in 01 00
-    // notify 1BBE  20 + 20 bytes       // ending in 01 00
+    // notify 1BEE  20 + 20 bytes       // ending in 01 00
     // notify 1338  10 bytes            // ending in 01 00
     // write  1338  13 bytes            // ending in 02 00
     // notify 1D24  20 * 10 + 15 bytes
@@ -140,7 +139,7 @@ class Libre3: Sensor {
     //
     // Shutdown:
     // write  1338  13 bytes            // ending in 03 00
-    // notify 1BBE  20 bytes            // ending in 01 00
+    // notify 1BEE  20 bytes            // ending in 01 00
     // write  1338  13 bytes            // ending in 04 00
 
 
