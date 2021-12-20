@@ -18,7 +18,7 @@ class Libre3: Sensor {
         var description: String {
             switch self {
             case .manufacturing:      return "Manufacturing"
-            case .storage:            return "Not Activated"
+            case .storage:            return "Not activated"
             case .insertionDetection: return "Insertion detection"
             case .insertionFailed:    return "Insertion failed"
             case .paired:             return "Paired"
@@ -86,6 +86,9 @@ class Libre3: Sensor {
         /// Writes and notifies 20-byte packets during activation and repairing a sensor
         case certificateData = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
+        // TODO:
+        case bleLogin        = "F001"
+
         var description: String {
             switch self {
             case .data:             return "data service"
@@ -100,6 +103,7 @@ class Libre3: Sensor {
             case .securityCommands: return "security commands"
             case .challengeData:    return "challenge data"
             case .certificateData:  return "certificate data"
+            case .bleLogin:         return "BLE login"
             }
         }
     }
