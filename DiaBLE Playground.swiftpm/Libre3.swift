@@ -87,6 +87,7 @@ class Libre3: Sensor {
         case certificateData = "089823FA-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         // TODO:
+        case debug = "08982400-EF89-11E9-81B4-2A2AE2DBCCE44"
         case bleLogin = "F001"
 
         var description: String {
@@ -103,6 +104,7 @@ class Libre3: Sensor {
             case .securityCommands: return "security commands"
             case .challengeData:    return "challenge data"
             case .certificateData:  return "certificate data"
+            case .debug:            return "debug service"
             case .bleLogin:         return "BLE login"
             }
         }
