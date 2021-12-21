@@ -390,6 +390,11 @@ class Libre3: Sensor {
     // MARK: - Constants
 
 
+    // Libre3BLESensor
+    static let STATE_AUTHENTICATING = 0x5
+    static let STATE_AUTHORIZING    = 0x8
+
+
     // Android MSLibre3Constants
     static let LIBRE3_HISTORIC_LIFECOUNT_INTERVAL = 5
     static let LIBRE3_MAX_HISTORIC_READING_IN_PACKET = 10
