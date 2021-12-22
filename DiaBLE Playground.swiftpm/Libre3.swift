@@ -31,6 +31,22 @@ class Libre3: Sensor {
     }
 
 
+    // TODO
+    struct PatchInfo {
+        let NFC_Key: Int
+        let localization: Int
+        let generation: Int
+        let puckGeneration: Int
+        let wearDuration: Int
+        let warmupTime: Int
+        let productType: Int
+        let state: State
+        let fwVersion: Data
+        let compressedSN: Data
+        let securityVersion: Int
+    }
+
+
     enum UUID: String, CustomStringConvertible, CaseIterable {
 
         /// Advertised primary data service
@@ -211,11 +227,11 @@ class Libre3: Sensor {
     /// - PATCH_CONTROL_COMMAND_SIZE = 7
     /// - a final sequential Int starting by 01 00 since it is enqueued
     enum ControlCommand {
-        case CTRL_CMD_HISTORIC(Data)        // 1
-        case CTRL_CMD_EVENTLOG(Data)        // 3
-        case CTRL_CMD_BACKFILL(Data)        // 2
-        case CTRL_CMD_FACTORY_DATA(Data)    // 4
-        case CTRL_CMD_SHUTDOWN_PATCH(Data)  // 5
+        case historic(Data)       // 1 - CTRL_CMD_HISTORIC
+        case backflii(Data)       // 2 - CTRL_CMD_BACKFILL
+        case eventLog(Data)       // 3 - CTRL_CMD_EVENTLOG
+        case factoryData(Data)    // 4 - CTRL_CMD_FACTORY_DATA
+        case shutdownPatch(Data)  // 5 - CTRL_CMD_SHUTDOWN_PATCH
     }
 
     var buffer: Data = Data()
