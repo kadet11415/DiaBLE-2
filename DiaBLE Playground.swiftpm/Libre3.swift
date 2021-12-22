@@ -47,6 +47,13 @@ class Libre3: Sensor {
     }
 
 
+    struct HistoricalData {
+        let reading: Int
+        let dqError: Int
+        let lifeCount: Int
+    }
+
+
     enum UUID: String, CustomStringConvertible, CaseIterable {
 
         /// Advertised primary data service
@@ -481,10 +488,10 @@ class Libre3: Sensor {
     static let CERT_SIGNATURE_LENGTH: Int = 0xDEADBEEF
 
     static let CMD_AUTHORIZATION_CHALLENGE: UInt8 = 42
-    static let CMD_AUTHORIZED : UInt8 = 42
+    static let CMD_AUTHORIZED: UInt8 = 42
     static let CMD_AUTHORIZE_ECDSA: UInt8 = 42
     static let CMD_AUTHORIZE_SYMMETRIC: UInt8 = 42
-    static let CMD_CERT_ACCEPTED : UInt8 = 42
+    static let CMD_CERT_ACCEPTED: UInt8 = 42
     static let CMD_CERT_READY: UInt8 = 42
     static let CMD_CHALLENGE_LOAD_DONE: UInt8 = 42
     static let CMD_ECDH_COMPLETE: UInt8 = 42
