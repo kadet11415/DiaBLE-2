@@ -228,7 +228,7 @@ class Libre3: Sensor {
     /// - a final sequential Int starting by 01 00 since it is enqueued
     enum ControlCommand {
         case historic(Data)       // 1 - CTRL_CMD_HISTORIC
-        case backflii(Data)       // 2 - CTRL_CMD_BACKFILL
+        case backfill(Data)       // 2 - CTRL_CMD_BACKFILL
         case eventLog(Data)       // 3 - CTRL_CMD_EVENTLOG
         case factoryData(Data)    // 4 - CTRL_CMD_FACTORY_DATA
         case shutdownPatch(Data)  // 5 - CTRL_CMD_SHUTDOWN_PATCH
@@ -409,14 +409,16 @@ class Libre3: Sensor {
 
 
     // Libre3BLESensor
-    static let STATE_AUTHENTICATING = 0x5
-    static let STATE_AUTHORIZING    = 0x8
+    static let STATE_NONE           = 0
+    static let STATE_AUTHENTICATING = 5
+    static let STATE_AUTHORIZING    = 8
+    static let MAX_WRITE_OFFSET_DATA_LENGTH = 18
+    static let HISTORIC_POINT_LATENCY = 17
 
 
     // Android MSLibre3Constants
     static let LIBRE3_HISTORIC_LIFECOUNT_INTERVAL = 5
     static let LIBRE3_MAX_HISTORIC_READING_IN_PACKET = 10
-    static let HISTORIC_POINT_LATENCY = 17
     static let LIBRE3_DQERROR_MAX = 0xFFFF
     static let LIBRE3_DQERROR_DQ              = 0x8000  // 32768
     static let LIBRE3_DQERROR_SENSOR_TOO_HOT  = 0xA000  // 40960
