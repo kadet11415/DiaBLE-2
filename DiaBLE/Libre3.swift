@@ -479,23 +479,6 @@ class Libre3: Sensor {
     static let MAX_SERIAL_NUMBER_SIZE = 0xf
 
 
-    // Libre3SKBCryptoLib
-    static let CRYPTO_EXTENSION_INIT_LIB = 0xDEADBEEF
-    static let CRYPTO_RETURN_SUCCESS = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_INIT_ECDH = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_SET_PATCH_ATTRIB = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_SET_CERTIFICATE = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_GENERATE_EPHEMERAL = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_GENERATE_KAUTH = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_ENCRYPT = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_DECRYPT = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_EXPORT_KAUTH = 0xDEADBEEF
-    static let PUBLIC_KEY_TYPE_UNCOMPRESSED = 42
-    static let CRYPTO_PUBLIC_KEY_SIZE = 0xDEADBEEF
-    static let CRYPTO_EXTENSION_WRAP_DIAGNOSTIC_DATA = 0xDEADBEEF
-    static let CRYPTO_RETURN_INVALID_PARAM = 0xDEADBEEF
-
-
     // Trident libre3SecurityConstants
     static let CERT_PATCH_DATE_STAMP_LENGTH: Int = 0xDEADBEEF
     static let CERT_PATCH_LENGTH: Int = 0xDEADBEEF
@@ -533,6 +516,30 @@ class Libre3: Sensor {
     static let L3_SEC_ERROR_INVALID_CERTIFICATE: Int = 0xDEADBEEF
     static let L3_SEC_ERROR_LIB_ERROR: Int = 0xDEADBEEF
 
+}
+
+
+struct Libre3SKBCryptoLib {
+    let g_engine: Int
+    let CRYPTO_EXTENSION_INIT_LIB: Int
+    let CRYPTO_RETURN_SUCCESS: Int
+    let CRYPTO_EXTENSION_INIT_ECDH: Int
+    let CRYPTO_EXTENSION_SET_PATCH_ATTRIB: Int
+    let CRYPTO_EXTENSION_SET_CERTIFICATE: Int
+    let CRYPTO_EXTENSION_GENERATE_EPHEMERAL: Int
+    let CRYPTO_EXTENSION_GENERATE_KAUTH: Int
+    let CRYPTO_EXTENSION_ENCRYPT: Int
+    let CRYPTO_EXTENSION_DECRYPT: Int
+    let CRYPTO_EXTENSION_EXPORT_KAUTH: Int
+    let PUBLIC_KEY_TYPE_UNCOMPRESSED: UInt8
+    let CRYPTO_PUBLIC_KEY_SIZE: Int
+    let CRYPTO_EXTENSION_WRAP_DIAGNOSTIC_DATA: Int
+    let CRYPTO_RETURN_INVALID_PARAM: Int
+    let patchSigningKey: Int
+    let securityVersion: Int
+    let max_key_index: Int
+    let app_private_key: Int
+    let app_certificate: Int
 }
 
 
