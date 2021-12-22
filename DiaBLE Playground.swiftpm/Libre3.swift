@@ -416,7 +416,7 @@ class Libre3: Sensor {
     static let HISTORIC_POINT_LATENCY = 17
 
 
-    // Android MSLibre3Constants
+    // Trident MSLibre3Constants
     static let LIBRE3_HISTORIC_LIFECOUNT_INTERVAL = 5
     static let LIBRE3_MAX_HISTORIC_READING_IN_PACKET = 10
     static let LIBRE3_DQERROR_MAX = 0xFFFF
@@ -471,6 +471,43 @@ class Libre3: Sensor {
     static let LIBRE3_DEFAULT_WARMUP_TIME = 0x3c
     static let MAX_SERIAL_NUMBER_SIZE = 0xf
 
+
+    // Trident libre3SecurityConstants
+    static let CERT_PATCH_DATE_STAMP_LENGTH: Int = 0xDEADBEEF
+    static let CERT_PATCH_LENGTH: Int = 0xDEADBEEF
+    static let CERT_PATCH_VERSION_LENGTH: Int = 0xDEADBEEF
+    static let CERT_PUBLIC_KEY_LENGTH: Int = 0xDEADBEEF
+    static let CERT_SERIAL_NUMBER_LENGTH: Int = 0xDEADBEEF
+    static let CERT_SIGNATURE_LENGTH: Int = 0xDEADBEEF
+
+    static let CMD_AUTHORIZATION_CHALLENGE: UInt8 = 42
+    static let CMD_AUTHORIZED : UInt8 = 42
+    static let CMD_AUTHORIZE_ECDSA: UInt8 = 42
+    static let CMD_AUTHORIZE_SYMMETRIC: UInt8 = 42
+    static let CMD_CERT_ACCEPTED : UInt8 = 42
+    static let CMD_CERT_READY: UInt8 = 42
+    static let CMD_CHALLENGE_LOAD_DONE: UInt8 = 42
+    static let CMD_ECDH_COMPLETE: UInt8 = 42
+    static let CMD_ECDH_START: UInt8 = 42
+    static let CMD_EPHEMERAL_KEY_READY: UInt8 = 42
+    static let CMD_EPHEMERAL_LOAD_DONE: UInt8 = 42
+    static let CMD_IV_AUTHENTICATED_SEND: UInt8 = 42
+    static let CMD_IV_READY: UInt8 = 42
+    static let CMD_KEY_AGREEMENT: UInt8 = 42
+    static let CMD_LOAD_CERT_DATA: UInt8 = 42
+    static let CMD_LOAD_CERT_DONE: UInt8 = 42
+    static let CMD_MODE_SWITCH: UInt8 = 42
+    static let CMD_SEND_CERT: UInt8 = 42
+    static let CMD_VERIFICATION_FAILURE: UInt8 = 42
+
+    static let CRYPTO_KEY_LENGTH_BYTES: Int = 0xDEADBEEF
+    static let CRYPTO_MAC_LENGTH_BYTES: Int = 0xDEADBEEF
+    static let L3_SEC_ERROR_AUTHENTICATION_FAILED: Int = 0xDEADBEEF
+    static let L3_SEC_ERROR_AUTHORIZATION_FAILED: Int = 0xDEADBEEF
+    static let L3_SEC_ERROR_DECRYPTION_FAILED: Int = 0xDEADBEEF
+    static let L3_SEC_ERROR_ENCRYPTION_FAILED: Int = 0xDEADBEEF
+    static let L3_SEC_ERROR_INVALID_CERTIFICATE: Int = 0xDEADBEEF
+    static let L3_SEC_ERROR_LIB_ERROR: Int = 0xDEADBEEF
 
 }
 
