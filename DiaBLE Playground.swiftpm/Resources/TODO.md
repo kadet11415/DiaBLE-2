@@ -1,12 +1,15 @@
 FIXME
 -----
 
+* Libre 3:
+  - Gen2 `.getSessionInfo` outpassed by new certificate data and ECDH ephemeral keys
 * iOS 15:
   - *"NFC scan success sheet displayed when NFC scan time out"* (https://developer.apple.com/forums/thread/687264)
 * Xcode 13:
   - *"No 'async' operations occur within 'await' expression"* warnings
 * Playgrounds 4:
-  - missing entitlements for HealthKit, NFC and Bluetooth background mode 
+  - frequent crashes while unwrapping optionals
+  - missing entitlements for HealthKit, NFC and Bluetooth background mode
 * Mac Catalyst:
   - log bogging down too early
 * @Published classes nonsense

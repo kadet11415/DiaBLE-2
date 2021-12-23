@@ -203,12 +203,12 @@ class Libre3: Sensor {
     enum SecurityCommand: UInt8, CustomStringConvertible {
 
         // can be sent sequentially during both the initial activation and when repairing a sensor
-        case security_01    = 0x01
-        case security_02    = 0x02
-        case security_03    = 0x03
-        case security_09    = 0x09
-        case security_0D    = 0x0D
-        case security_0E    = 0x0E
+        case security_01 = 0x01
+        case security_02 = 0x02
+        case security_03 = 0x03
+        case security_09 = 0x09
+        case security_0D = 0x0D
+        case security_0E = 0x0E
 
         /// final command to get a 67-byte session info
         case getSessionInfo = 0x08
