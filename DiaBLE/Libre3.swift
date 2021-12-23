@@ -32,6 +32,17 @@ class Libre3: Sensor {
 
 
     // TODO
+
+    // libre3DPCRLInterface
+
+    struct ActivationInfo {
+        let signatureActivation: Int
+        let signatureEnableBle: Int
+        let wearDuration: Int
+        let obpState: Int
+    }
+
+
     struct PatchInfo {
         let NFC_Key: Int
         let localization: Int
@@ -47,10 +58,79 @@ class Libre3: Sensor {
     }
 
 
+    struct ErrorData {
+        let errorCode: Int
+        let data: Data
+    }
+
+
+    struct GlucoseData {
+        let lifeCount: UInt16
+        let readingMgDl: UInt16
+        let dqError: UInt16
+        let historicalLifeCount: UInt16
+        let historicalReading: UInt16
+        let projectedGlucose: UInt16
+        let historicalReadingDQError: UInt16
+        let rateOfChange: UInt16
+        let trend: Int
+        let esaDuration: UInt16
+        let temperatureStatus: Int
+        let actionableStatus: Int
+        let glycemicAlarmStatus: Int
+        let glucoseRangeStatus: Int
+        let resultRangeStatus: Int
+        let sensorCondition: Int
+        let uncappedCurrentMgDl: Int
+        let uncappedHistoricMgDl: Int
+        let temperature: Int
+        let fastData: Data
+        let reservedData: Data
+    }
+
+
     struct HistoricalData {
         let reading: Int
         let dqError: Int
         let lifeCount: Int
+    }
+
+
+    struct ActivationResponse {
+        let bdAddress: Data
+        let BLE_Pin: Data
+        let activationTime: Int
+    }
+
+
+    struct EventLog {
+        let lifeCount: Int
+        let errorData: Int
+        let eventData: Int
+        let index: Int
+    }
+
+
+    struct FastData {
+        let lifeCount: Int
+        let uncappedReadingMgdl: Int
+        let uncappedHistoricReadingMgDl: Int
+        let dqError: Int
+        let temperature: Int
+        let rawData: Data
+    }
+
+
+    struct PatchStatus {
+        let patchState: Int
+        let totalEvents: Int
+        let lifeCount: Int
+        let errorData: Int
+        let eventData: Int
+        let index: Int
+        let currentLifeCount: Int
+        let stackDisconnectReason: Int
+        let appDisconnectReason: Int
     }
 
 
