@@ -31,7 +31,7 @@ class Libre3: Sensor {
     }
 
 
-    // TODO
+    // TODO: var members, struct references
 
     // libre3DPCRLInterface
 
@@ -337,7 +337,7 @@ class Libre3: Sensor {
             // TODO: let warmupTime = patchInfo[10] (0x1E) or patchInfo[11] (0x0F) ?
             log("Libre 3: wear duration: \(maxLife) minutes (\(maxLife.formattedInterval), 0x\(maxLife.hex))")
             // state 04 detected already after 15 minutes, 08 for a detached sensor
-            // 05 lasts more than 12 hours, almost 24, before that BLE shuts down
+            // 04 lasts more than further 12 hours, almost 24, before that BLE shuts down
             let sensorState = patchInfo[16]
             // TODO: manage specific Libre 3 states
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
@@ -376,13 +376,14 @@ class Libre3: Sensor {
 
 
     // TODO
-    func write(_ data: Data, for uuid: String = "") {
+    func write(_ data: Data, for uuid: UUID = UUID.challengeData) {
         let packets = (data.count - 1) / 18 + 1
         for i in 0 ... packets - 1 {
             let offset = i * 18
             let id = Data([UInt8(offset & 0xFF), UInt8(offset >> 8)])
             let packet = id + data[offset ... min(offset + 17, data.count - 1)]
-            debugLog("TEST: packet to write: \(packet.hexBytes)")
+            debugLog("Bluetooth: writing packet \(packet.hexBytes) to \(transmitter!.peripheral!.name!)'s \(uuid.description) characteristic")
+            transmitter!.write(packet, for: uuid.rawValue, .withResponse)
         }
     }
 
@@ -456,16 +457,15 @@ class Libre3: Sensor {
                         let challengeCount = UInt16(payload[16...17])
                         log("\(type) \(transmitter!.peripheral!.name!): security challenge # \(challengeCount.hex): \(payload.hex)")
 
-                        if main.settings.debugLevel > 0 {
-                            let bytes = "03 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 00 01 5F 14 9F E1 01 00 00 00 00 00 00 00 00 04 E2 36 95 4F FD 06 A2 25 22 57 FA A7 17 6A D9 0A 69 02 E6 1D DA FF 40 FB 36 B8 FB 52 AA 09 2C 33 A8 02 32 63 2E 94 AF A8 28 86 AE 75 CE F9 22 CD 88 85 CE 8C DA B5 3D AB 2A 4F 23 9B CB 17 C2 6C DE 74 9E A1 6F 75 89 76 04 98 9F DC B3 F0 C7 BC 1D A5 E6 54 1D C3 CE C6 3E 72 0C D9 B3 6A 7B 59 3C FC C5 65 D6 7F 1E E1 84 64 B9 B9 7C CF 06 BE D0 40 C7 BB D5 D2 2F 35 DF DB 44 58 AC 7C 46 15".bytes
-                            write(bytes)
+                        if main.settings.debugLevel > 1 {
+                            let certificate = "03 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 00 01 5F 14 9F E1 01 00 00 00 00 00 00 00 00 04 E2 36 95 4F FD 06 A2 25 22 57 FA A7 17 6A D9 0A 69 02 E6 1D DA FF 40 FB 36 B8 FB 52 AA 09 2C 33 A8 02 32 63 2E 94 AF A8 28 86 AE 75 CE F9 22 CD 88 85 CE 8C DA B5 3D AB 2A 4F 23 9B CB 17 C2 6C DE 74 9E A1 6F 75 89 76 04 98 9F DC B3 F0 C7 BC 1D A5 E6 54 1D C3 CE C6 3E 72 0C D9 B3 6A 7B 59 3C FC C5 65 D6 7F 1E E1 84 64 B9 B9 7C CF 06 BE D0 40 C7 BB D5 D2 2F 35 DF DB 44 58 AC 7C 46 15".bytes
+                            write(certificate, for: UUID.certificateData)
                         }
 
                         // TODO: write the unlock payload
-                        log("\(type) \(transmitter!.peripheral!.name!): TEST: sending to 0x22CE zeroed packets of 20 + 20 + 6 bytes prefixed by 00 00, 12 00, 24 00 (it should be the unlock payload)")
-                        transmitter!.write("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
-                        transmitter!.write("12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00".bytes, for: uuid, .withResponse)
-                        transmitter!.write("24 00 00 00 00 00".bytes, for: uuid, .withResponse)
+                        log("\(type) \(transmitter!.peripheral!.name!): TEST: writing 40-zero challenge data (it should be the unlock payload)")
+                        let challengeData = Data(count: 40)
+                        write(challengeData)
 
                         // writing .getSessionInfo makes the Libre 3 disconnect
                         send(securityCommand: .getSessionInfo)
