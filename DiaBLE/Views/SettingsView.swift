@@ -48,6 +48,7 @@ struct SettingsView: View {
                 Spacer()
 
                 HStack {
+                    Spacer()
                     Stepper(value: $settings.readingInterval,
                             in: settings.preferredTransmitter == .miaomiao || (settings.preferredTransmitter == .none && app.transmitter != nil && app.transmitter.type == .transmitter(.miaomiao)) ?
                             1 ... 5 : settings.preferredTransmitter == .blu || (settings.preferredTransmitter == .none && app.transmitter != nil && app.transmitter.type == .transmitter(.blu)) ?
@@ -58,9 +59,10 @@ struct SettingsView: View {
                             label: {
                         Image(systemName: "timer").resizable().frame(width: 32, height: 32)
                         Text(" \(settings.readingInterval) min") })
+                        .frame(maxWidth: 200)
+                    Spacer()
                 }
                 .foregroundColor(.orange)
-                .padding(.horizontal, 80)
 
                 Spacer()
 
