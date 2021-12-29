@@ -327,7 +327,7 @@ class Libre3: Sensor {
     var expectedStreamSize = 0
 
 
-    // TODO: https://github.com/gui-dos/DiaBLE/discussions/7 - "Libre 3 NFC"
+    // https://github.com/gui-dos/DiaBLE/discussions/7 - "Libre 3 NFC"
 
     func parsePatchInfo() {
         if patchInfo.count == 28 {
@@ -375,7 +375,6 @@ class Libre3: Sensor {
     }
 
 
-    // TODO
     func write(_ data: Data, for uuid: UUID = .challengeData) {
         let packets = (data.count - 1) / 18 + 1
         for i in 0 ... packets - 1 {
@@ -599,6 +598,7 @@ class Libre3: Sensor {
 }
 
 
+/// whiteCryption Secure Key Box
 struct Libre3SKBCryptoLib {
     let g_engine: Int
     let CRYPTO_EXTENSION_INIT_LIB: Int
