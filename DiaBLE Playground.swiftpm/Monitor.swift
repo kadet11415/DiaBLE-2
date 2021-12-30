@@ -174,6 +174,9 @@ struct Monitor: View {
                         CalibrationView(showingCalibrationParameters: $showingCalibrationParameters, editingCalibration: $editingCalibration)
 
                     }
+#if targetEnvironment(macCatalyst)
+                    .padding(.horizontal, 15)
+#endif
 
                     Spacer()
                     Spacer()

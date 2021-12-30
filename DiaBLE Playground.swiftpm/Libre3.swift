@@ -387,7 +387,7 @@ class Libre3: Sensor {
     }
 
 
-    /// called by Abbott Trasmitter class
+    /// called by Abbott Transmitter class
     func read(_ data: Data, for uuid: String) {
 
         switch UUID(rawValue: uuid) {

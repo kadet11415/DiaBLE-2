@@ -162,6 +162,9 @@ struct DataView: View {
                     }
                     .listStyle(.plain)
                 }
+#if targetEnvironment(macCatalyst)
+                .padding(.leading, 15)
+#endif
             }
             .font(.system(.caption, design: .monospaced))
             .navigationBarTitleDisplayMode(.inline)

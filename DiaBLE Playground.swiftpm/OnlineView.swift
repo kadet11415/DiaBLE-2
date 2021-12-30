@@ -45,7 +45,7 @@ struct OnlineView: View {
                             }
 
                             Text(!app.deviceState.isEmpty && app.deviceState != "Disconnected" && (readingCountdown > 0 || app.deviceState == "Reconnecting...") ?
-                                    "\(readingCountdown) s" : "...")
+                                 "\(readingCountdown) s" : "...")
                                 .fixedSize()
                                 .foregroundColor(.orange).font(Font.caption.monospacedDigit())
                                 .onReceive(timer) { _ in
@@ -70,7 +70,10 @@ struct OnlineView: View {
                         }
 
                     }.foregroundColor(.accentColor)
-                    .padding(.bottom, 4)
+                        .padding(.bottom, 4)
+#if targetEnvironment(macCatalyst)
+                        .padding(.horizontal, 15)
+#endif
 
 
                     WebView(site: settings.nightscoutSite, query: "token=\(settings.nightscoutToken)", delegate: app.main?.nightscout )
@@ -91,6 +94,9 @@ struct OnlineView: View {
                     }
                     .listStyle(.plain)
                     .font(.system(.caption, design: .monospaced)).foregroundColor(.cyan)
+#if targetEnvironment(macCatalyst)
+                    .padding(.leading, 15)
+#endif
                     .onAppear { if let nightscout = app.main?.nightscout { nightscout.read() } }
                 }
             }

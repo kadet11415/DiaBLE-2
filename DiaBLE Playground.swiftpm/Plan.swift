@@ -31,6 +31,9 @@ struct Plan: View {
                         }
                 }
             }
+#if targetEnvironment(macCatalyst)
+            .padding(.horizontal, 15)
+#endif
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Plan")
         }.navigationViewStyle(.stack)

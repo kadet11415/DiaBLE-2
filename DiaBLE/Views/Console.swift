@@ -73,6 +73,9 @@ struct Console: View {
 
                 ConsoleSidebar(showingNFCAlert: $showingNFCAlert)
             }
+#if targetEnvironment(macCatalyst)
+            .padding(.horizontal, 15)
+#endif
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Console")
