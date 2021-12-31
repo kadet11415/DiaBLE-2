@@ -307,10 +307,12 @@ public class MainDelegate: UIResponder, UIApplicationDelegate, UIWindowSceneDele
 
         // TODO: delete mirrored implementation from Abbott Device
         // TODO: compute accurate delta and update trend arrow
-        let deltaMinutes = history.factoryTrend[5].value != 0 ? 5 : 6
-        let delta = (history.factoryTrend[0].value != 0 ? history.factoryTrend[0].value : (history.factoryTrend[1].value != 0 ? history.factoryTrend[1].value : history.factoryTrend[2].value)) - history.factoryTrend[deltaMinutes].value
-        app.trendDeltaMinutes = deltaMinutes
-        app.trendDelta = delta
+        if history.factoryTrend.count > 6 {
+            let deltaMinutes = history.factoryTrend[5].value != 0 ? 5 : 6
+            let delta = (history.factoryTrend[0].value != 0 ? history.factoryTrend[0].value : (history.factoryTrend[1].value != 0 ? history.factoryTrend[1].value : history.factoryTrend[2].value)) - history.factoryTrend[deltaMinutes].value
+            app.trendDeltaMinutes = deltaMinutes
+            app.trendDelta = delta
+        }
 
         var title = currentGlucose > 0 ? currentGlucose.units : "---"
 
