@@ -52,7 +52,7 @@ struct Monitor: View {
                                     Color.red : Color.blue)
                         .cornerRadius(6)
 
-                    // TODO
+                    // TODO: display both delta and trend arrow
                     Group {
                         if app.trendDeltaMinutes > 0 {
                             HStack(spacing: 4) {

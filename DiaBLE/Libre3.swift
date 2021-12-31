@@ -145,7 +145,7 @@ class Libre3: Sensor {
         /// (for example 01 00 and 02 00 when receiving recent and past data on 195A and 1AB8)
         case patchControl = "08981338-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
-        // Receiving "Encryption is insufficient" error when activating notifications
+        // Receiving "Encryption is insufficient" error when activating notifications before the security commands
         /// Notifies 18 bytes ending in 01 00 during a connection
         case patchStatus = "08981482-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Read"]
 
@@ -235,17 +235,17 @@ class Libre3: Sensor {
     // enable notifications for 177A
     // write  1338  13 bytes            // ending in 01 00
     // notify 177A  15 + 20 bytes       // one-minute reading
-    // notify 195A  20-byte packets of recent data ending in a sequential Int
+    // notify 195A  20-byte packets     // historical data
     // notify 1338  10 bytes            // ending in 01 00
     // write  1338  13 bytes            // ending in 02 00
-    // notify 1AB8  20-byte packets of past data ending in a sequential Int
+    // notify 1AB8  20-byte packets     // clinical data
     // notify 1338  10 byte             // ending in 02 00
     //
     // Activation:
     // enable notifications for 2198, 23FA and 22CE
     // write  2198  01
     // write  2198  02
-    // write  23FA  20 * 9 bytes
+    // write  23FA  20 * 9 bytes        // fixed certificate data
     // write  2198  03
     // notify 2198  04
     // write  2198  09
@@ -267,15 +267,15 @@ class Libre3: Sensor {
     // notify 1482  18 bytes            // patch status
     // enable notifications for 177A
     // write  1338  13 bytes            // ending in 01 00
-    // notify 1BEE  20 + 20 bytes       // ending in 01 00
+    // notify 1BEE  20 + 20 bytes       // event log
     // notify 1338  10 bytes            // ending in 01 00
     // write  1338  13 bytes            // ending in 02 00
-    // notify 1D24  20 * 10 + 15 bytes
+    // notify 1D24  20 * 10 + 15 bytes  // factory data
     // notify 1338  10 bytes            // ending in 02 00
     //
     // Shutdown:
     // write  1338  13 bytes            // ending in 03 00
-    // notify 1BEE  20 bytes            // ending in 01 00
+    // notify 1BEE  20 bytes            // event log
     // write  1338  13 bytes            // ending in 04 00
 
 
