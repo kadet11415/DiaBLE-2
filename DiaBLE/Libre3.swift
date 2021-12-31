@@ -336,8 +336,8 @@ class Libre3: Sensor {
             maxLife = Int(UInt16(wearDuration))
             // TODO: let warmupTime = patchInfo[10] (0x1E) or patchInfo[11] (0x0F) ?
             log("Libre 3: wear duration: \(maxLife) minutes (\(maxLife.formattedInterval), 0x\(maxLife.hex))")
-            // state 04 detected already after 15 minutes, 08 for a detached sensor
-            // 04 lasts more than further 12 hours, almost 24, before that BLE shuts down
+            // state 04 (.paired) detected already after 15 minutes, 08 for a detached sensor (ERROR_TERMINATED)
+            // 05 (.expired) lasts more than further 12 hours, almost 24, before BLE shutdown (06 = .terminated)
             let sensorState = patchInfo[16]
             // TODO: manage specific Libre 3 states
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
