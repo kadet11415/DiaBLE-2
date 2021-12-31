@@ -367,7 +367,9 @@ class BluetoothDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             // TODO: Libre 3
             if serviceUUID == Libre3.UUID.security.rawValue {
                 if sensor.transmitter == nil { sensor.transmitter = app.transmitter }
-                ((app.device as? Abbott)?.sensor as? Libre3)?.send(securityCommand: .readChallenge)
+                if settings.debugLevel < 2 { // TEST: sniff Trident
+                    ((app.device as? Abbott)?.sensor as? Libre3)?.send(securityCommand: .readChallenge)
+                }
 
             } else if (app.transmitter as! Abbott).securityGeneration == 2 && (app.transmitter as! Abbott).authenticationState == .notAuthenticated {
                 app.device.peripheral?.setNotifyValue(true, for: app.device.writeCharacteristic!)
