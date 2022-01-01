@@ -433,8 +433,8 @@ class Libre3: Sensor {
         case .securityCommands:
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
-                log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes")
-                if expectedStreamSize == 71 { // sniffed from Trident
+                log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes (payload: \(data[1]) bytes)")
+                if data[1] == 67 { // sniffed from Trident
                     currentSecurityCommand = .getSessionInfo
                 }
             }
@@ -448,7 +448,7 @@ class Libre3: Sensor {
                 if buffer.count == expectedStreamSize {
 
                     let (payload, hexDump) = parsePackets(buffer)
-                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes):\n\(hexDump)")
+                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes of \(UUID(rawValue: uuid)!) (payload: \(payload.count) bytes):\n\(hexDump)")
 
                     switch currentSecurityCommand {
 
