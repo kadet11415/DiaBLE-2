@@ -396,9 +396,11 @@ class Libre3: Sensor {
             if data.count == 10 {
                 let suffix = data.suffix(2).hex
                 if suffix == "0100" {
-                    // TODO: end of 1950 recent data
+                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count/20) packets of historical data")
+                    // TODO
                 } else if suffix == "0200" {
-                    // TODO: end of 1AB8 past data
+                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count/20) packets of clinical data")
+                    // TODO
                 }
                 buffer = Data()
             }
@@ -413,7 +415,7 @@ class Libre3: Sensor {
                 if buffer.count == 35 {
                     let payload = buffer.prefix(33)
                     let id = UInt16(buffer.suffix(2))
-                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
+                    log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes of \(UUID(rawValue: uuid)!) (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
                     buffer = Data()
                 }
             }
@@ -426,13 +428,15 @@ class Libre3: Sensor {
             }
             let payload = data.prefix(18)
             let id = UInt16(data.suffix(2))
-            log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count) bytes (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
-            // TODO: the end of the stream is notified by 1338 with 10 bytes ending in 0100 for 195A, 0200 for 1AB8
+            log("\(type) \(transmitter!.peripheral!.name!): received \(data.count) bytes of \(UUID(rawValue: uuid)!) (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
 
         case .securityCommands:
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
                 log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes")
+                if expectedStreamSize == 71 { // sniffed from Trident
+                    currentSecurityCommand = .getSessionInfo
+                }
             }
 
         case .challengeData:
