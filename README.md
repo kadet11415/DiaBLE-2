@@ -36,6 +36,9 @@ Please refer to the [**TODOs**](https://github.com/gui-dos/DiaBLE/blob/master/TO
 ***Note***: the exploitation which allows to reset and reactivate a Libre 1 is well known to the Vendor and was unveiled already during [BlackAlps 2019](https://www.youtube.com/watch?v=Y9vtGmxh1IQ) and in [PoC||GTFO 0x20](https://archive.org/stream/pocorgtfo20#page/n6/mode/1up).
 
 ---
+
+[![Join the chat at https://gitter.im/DiaBL3/community](https://badges.gitter.im/DiaBL3/community.svg)](https://gitter.im/DiaBL3/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ***Credits***: [@bubbledevteam](https://github.com/bubbledevteam), [@captainbeeheart](https://github.com/captainbeeheart), [@cryptax](https://github.com/cryptax), [@dabear](https://github.com/dabear), [@ivalkou](https://github.com/ivalkou), [@keencave](https://github.com/keencave), [LibreMonitor](https://github.com/UPetersen/LibreMonitor/tree/Swift4), [Loop](https://github.com/LoopKit/Loop), [Marek Macner](https://github.com/MarekM60), [Nightguard]( https://github.com/nightscout/nightguard), [@travisgoodspeed](https://github.com/travisgoodspeed), [WoofWoof](https://github.com/gshaviv/ninety-two), [xDrip+](https://github.com/NightscoutFoundation/xDrip), [xDrip4iO5](https://github.com/JohanDegraeve/xdripswift).
 
 ***Special thanks to***: [Ambrosia](https://www.ambrosiasys.com), [@JtxGit](https://github.com/JtxGit), [@monder](https://github.com/monder), [Vic Wu](https://github.com/birdfly).
