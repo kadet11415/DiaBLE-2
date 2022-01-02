@@ -484,8 +484,8 @@ class Libre3: Sensor {
                         send(securityCommand: .getSessionInfo)
 
                     case .getSessionInfo:
-                        log("\(type) \(transmitter!.peripheral!.name!): session info: \(payload.hex)")
-                        // TODO
+                        let challengeCountPlusOne = UInt16(payload[60...61])
+                        log("\(type) \(transmitter!.peripheral!.name!): session info: \(payload.hex) (security challenge # + 1: \(challengeCountPlusOne.hex))")
                         transmitter!.peripheral?.setNotifyValue(true, for: transmitter!.characteristics[UUID.patchStatus.rawValue]!)
                         log("\(type) \(transmitter!.peripheral!.name!): enabling notifications on the patch status characteristic")
 
