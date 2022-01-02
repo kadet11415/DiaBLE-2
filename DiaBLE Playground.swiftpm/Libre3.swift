@@ -485,6 +485,10 @@ class Libre3: Sensor {
 
                     case .getSessionInfo:
                         log("\(type) \(transmitter!.peripheral!.name!): session info: \(payload.hex)")
+                        // TODO
+                        transmitter!.peripheral?.setNotifyValue(true, for: transmitter!.characteristics[UUID.patchStatus.rawValue]!)
+                        log("\(type) \(transmitter!.peripheral!.name!): enabling notifications on the patch status characteristic")
+
 
                     default:
                         break // currentCommand
