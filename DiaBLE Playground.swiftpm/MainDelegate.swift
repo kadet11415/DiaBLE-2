@@ -75,7 +75,7 @@ public class MainDelegate: UIResponder, UIApplicationDelegate, UIWindowSceneDele
 
         // features currently in beta testing
         if settings.debugLevel > 1 {
-            app.sensor = LibrePro.test(main: self)
+            // app.sensor = LibrePro.test(main: self)
         }
 
     }
