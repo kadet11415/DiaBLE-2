@@ -395,6 +395,7 @@ class Libre3: Sensor {
         case .patchControl:
             if data.count == 10 {
                 let suffix = data.suffix(2).hex
+                // TODO: manage enqueued id
                 if suffix == "0100" {
                     log("\(type) \(transmitter!.peripheral!.name!): received \(buffer.count/20) packets of historical data")
                     // TODO
@@ -420,7 +421,7 @@ class Libre3: Sensor {
                 }
             }
 
-        case .historicalData, .clinicalData:
+        case .historicalData, .clinicalData, .eventLog, .factoryData:
             if buffer.count == 0 {
                 buffer = Data(data)
             } else {
@@ -429,6 +430,15 @@ class Libre3: Sensor {
             let payload = data.prefix(18)
             let id = UInt16(data.suffix(2))
             log("\(type) \(transmitter!.peripheral!.name!): received \(data.count) bytes of \(UUID(rawValue: uuid)!) (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
+
+        case .patchStatus:
+            if buffer.count == 0 {
+                let payload = data.prefix(16)
+                let id = UInt16(data.suffix(2))
+                log("\(type) \(transmitter!.peripheral!.name!): received \(data.count) bytes of \(UUID(rawValue: uuid)!) (payload: \(payload.count) bytes): \(payload.hex), id: \(id.hex)")
+            }
+            // TODO
+
 
         case .securityCommands:
             if data.count == 2 {
