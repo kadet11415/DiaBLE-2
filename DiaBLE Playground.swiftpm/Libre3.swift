@@ -576,6 +576,20 @@ class Libre3: Sensor {
     static let MAX_SERIAL_NUMBER_SIZE = 0xf
 
 
+    // Trident ISecurityContext
+    static let IV_ENC_SIZE = 8
+    static let MODE_DECRYPT = 2
+    static let MODE_ENCRYPT = 1
+    static let PACKET_TYPE_CONTROL_COMMAND = 0
+    static let PACKET_TYPE_CONTROL_RESPONSE = 1
+    static let PACKET_TYPE_PATCH_STATUS = 2
+    static let PACKET_TYPE_CURRENT_GLUCOSE = 3
+    static let PACKET_TYPE_BACKFILL_HISTORIC = 4
+    static let PACKET_TYPE_BACKFILL_CLINICAL = 5
+    static let PACKET_TYPE_EVENT_LOG = 6
+    static let PACKET_TYPE_FACTORY_DATA = 7
+
+
     // Trident libre3SecurityConstants
     static let CERT_PATCH_DATE_STAMP_LENGTH: UInt = 0xDEADBEEF
     static let CERT_PATCH_LENGTH: UInt = 0xDEADBEEF
