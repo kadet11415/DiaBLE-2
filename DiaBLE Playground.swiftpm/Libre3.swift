@@ -327,8 +327,6 @@ class Libre3: Sensor {
     var expectedStreamSize = 0
 
 
-    // https://github.com/gui-dos/DiaBLE/discussions/7 - "Libre 3 NFC"
-
     func parsePatchInfo() {
         if patchInfo.count == 28 {
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
@@ -444,7 +442,10 @@ class Libre3: Sensor {
             if data.count == 2 {
                 expectedStreamSize = Int(data[1] + data[1] / 20 + 1)
                 log("\(type) \(transmitter!.peripheral!.name!): expected response size: \(expectedStreamSize) bytes (payload: \(data[1]) bytes)")
-                if data[1] == 67 { // sniffed from Trident
+                // TEST: when sniffing Trident:
+                if data[1] == 23 {
+                    currentSecurityCommand = .readChallenge
+                } else if data[1] == 67 {
                     currentSecurityCommand = .getSessionInfo
                 }
             }
@@ -470,18 +471,19 @@ class Libre3: Sensor {
                         let challengeCount = UInt16(payload[16...17])
                         log("\(type) \(transmitter!.peripheral!.name!): security challenge # \(challengeCount.hex): \(payload.hex)")
 
-                        if main.settings.debugLevel > 1 {
+                        // TODO
+                        if main.settings.debugLevel > 2 {
                             let certificate = "03 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 00 01 5F 14 9F E1 01 00 00 00 00 00 00 00 00 04 E2 36 95 4F FD 06 A2 25 22 57 FA A7 17 6A D9 0A 69 02 E6 1D DA FF 40 FB 36 B8 FB 52 AA 09 2C 33 A8 02 32 63 2E 94 AF A8 28 86 AE 75 CE F9 22 CD 88 85 CE 8C DA B5 3D AB 2A 4F 23 9B CB 17 C2 6C DE 74 9E A1 6F 75 89 76 04 98 9F DC B3 F0 C7 BC 1D A5 E6 54 1D C3 CE C6 3E 72 0C D9 B3 6A 7B 59 3C FC C5 65 D6 7F 1E E1 84 64 B9 B9 7C CF 06 BE D0 40 C7 BB D5 D2 2F 35 DF DB 44 58 AC 7C 46 15".bytes
                             write(certificate, for: .certificateData)
                         }
 
-                        // TODO: write the unlock payload
-                        log("\(type) \(transmitter!.peripheral!.name!): TEST: writing 40-zero challenge data (it should be the unlock payload)")
-                        let challengeData = Data(count: 40)
-                        write(challengeData)
-
-                        // writing .getSessionInfo makes the Libre 3 disconnect
-                        send(securityCommand: .getSessionInfo)
+                        if main.settings.debugLevel < 2 { // TEST: sniff Trident
+                            log("\(type) \(transmitter!.peripheral!.name!): writing 40-zero challenge data (it should be the unlock payload)")
+                            let challengeData = Data(count: 40)
+                            write(challengeData)
+                            // writing .getSessionInfo makes the Libre 3 disconnect
+                            send(securityCommand: .getSessionInfo)
+                        }
 
                     case .getSessionInfo:
                         let challengeCountPlusOne = UInt16(payload[60...61])
