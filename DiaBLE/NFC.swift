@@ -447,7 +447,7 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
                     }
                 }
 
-                var (start, data) = try await sensor.securityGeneration < 2 ?
+                let (start, data) = try await sensor.securityGeneration < 2 ?
                 read(fromBlock: 0, count: blocks) : readBlocks(from: 0, count: blocks)
 
                 let lastReadingDate = Date()
