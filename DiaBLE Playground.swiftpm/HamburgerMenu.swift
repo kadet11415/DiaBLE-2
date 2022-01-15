@@ -84,9 +84,8 @@ struct HamburgerMenu: View {
                 NavigationView {
                     VStack(spacing: 40) {
                         VStack {
-                            Image(uiImage: getAppIcon()).resizable().frame(width: 100, height: 100)
                             // TODO: get AppIcon 1024x1024
-                            // Image(uiImage: UIImage(named: "AppIcon60x60")!).resizable().frame(width: 100, height: 100)
+                            Image(uiImage: UIImage(named: "AppIcon")!).resizable().frame(width: 100, height: 100)
                             Link("https://github.com/gui-dos/DiaBLE",
                                  destination: URL(string: "https://github.com/gui-dos/DiaBLE")!)
                         }
@@ -157,21 +156,4 @@ struct HamburgerMenu_Previews: PreviewProvider {
                 .previewLayout(.fixed(width: 180, height: 400))
         }
     }
-}
-
-
-// TODO: get AppIcon 1024x1024
-
-// https://medium.com/macoclock/swift-how-to-get-current-app-icon-in-ios-2b3adbeedf16
-
-/// - Returns: i. e. "AppIcon60x60.png"
-func getAppIcon() -> UIImage {
-    var appIcon: UIImage! {
-        guard let iconsDictionary = Bundle.main.infoDictionary?["CFBundleIcons"] as? [String: Any],
-              let primaryIconsDictionary = iconsDictionary["CFBundlePrimaryIcon"] as? [String: Any],
-              let iconFiles = primaryIconsDictionary["CFBundleIconFiles"] as? [String],
-              let lastIcon = iconFiles.last else { return UIImage(named: "AppIcon") }
-        return UIImage(named: lastIcon)
-    }
-    return appIcon
 }
