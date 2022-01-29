@@ -362,8 +362,10 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
             // TODO: Libre 3
             if let sensor = sensor as? Libre3 {
                 sensor.parsePatchInfo()
-                let aa = try await send(NFCCommand(code: 0xAA))
-                log("NFC: Libre 3 `AA` command output: \(aa.hexBytes), CRC: \(Data(aa.suffix(2).reversed()).hex), computed CRC: \(aa.prefix(aa.count-2).crc16.hex), string: \"\(aa.string)\"")
+                do {
+                    let aa = try await send(NFCCommand(code: 0xAA))
+                    log("NFC: Libre 3 `AA` command output: \(aa.hexBytes), CRC: \(Data(aa.suffix(2).reversed()).hex), computed CRC: \(aa.prefix(aa.count-2).crc16.hex), string: \"\(aa.string)\"")
+                } catch { }
             }
 
             log("NFC: sensor serial number: \(sensor.serial)")
