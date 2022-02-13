@@ -171,7 +171,9 @@ class Libre3: Sensor {
         /// Security service
         case security = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
-        /// Writes a single byte command, may notify in the second byte the effective length of the returned stripped stream
+        /// Writes a single byte command as defined in libre3SecurityConstants' `CMD_`
+        /// May notify two bytes: the successfull status (also defined as `CMD_READY/DONE/FAILURE`)
+        /// and the effective length of the payload streamed on 22CE / 23FA
         /// 01: very first command when activating a sensor
         /// 02: written immediately after 01
         /// 03: third command sent during activation
@@ -186,6 +188,7 @@ class Libre3: Sensor {
         /// Notifies the 23-byte security challenge + prefixes
         /// Writes the 40-byte unlock payload + prefixes
         /// Notifies the 67-byte session info + prefixes
+        /// The first two of the last seven notified bytes (16 + 7, 60 + 7) are a progressive Int since activation
         case challengeData = "089822CE-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify", "Write"]
 
         /// Writes and notifies 20-byte packets during activation and repairing a sensor
