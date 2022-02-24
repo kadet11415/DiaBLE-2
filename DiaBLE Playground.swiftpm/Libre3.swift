@@ -172,7 +172,7 @@ class Libre3: Sensor {
         case security = "0898203A-EF89-11E9-81B4-2A2AE2DBCCE4"
 
         /// Writes a single byte command as defined in libre3SecurityConstants' `CMD_`
-        /// May notify two bytes: the successfull status (also defined as `CMD_READY/DONE/FAILURE`)
+        /// May notify two bytes: the successful status (also defined as `CMD_READY/DONE/FAILURE`)
         /// and the effective length of the payload streamed on 22CE / 23FA
         /// 01: very first command when activating a sensor
         /// 02: written immediately after 01
@@ -244,7 +244,7 @@ class Libre3: Sensor {
     // notify 1338  10 bytes            // ending in 01 00
     // write  1338  13 bytes            // ending in 02 00
     // notify 1AB8  20-byte packets     // clinical data
-    // notify 1338  10 byte             // ending in 02 00
+    // notify 1338  10 bytes            // ending in 02 00
     //
     // Activation:
     // enable notifications for 2198, 23FA and 22CE

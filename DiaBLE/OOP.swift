@@ -406,12 +406,10 @@ extension MainDelegate {
     func applyOOP(sensor: Sensor?) async {
 
         if !settings.usingOOP {
-            DispatchQueue.main.async {
-                self.app.oopGlucose = 0
-                self.app.oopAlarm = .unknown
-                self.app.oopTrend = .unknown
-                self.history.values = []
-            }
+            app.oopGlucose = 0
+            app.oopAlarm = .unknown
+            app.oopTrend = .unknown
+            history.values = []
             return
         }
 
@@ -439,11 +437,9 @@ extension MainDelegate {
                             log("OOP: null calibration")
                             errorStatus("OOP calibration not valid")
                         } else {
-                            DispatchQueue.main.async {
-                                self.settings.oopCalibration = oopCalibration.parameters
-                                if self.app.calibration == .empty || (self.app.calibration != self.settings.calibration) {
-                                    self.app.calibration = oopCalibration.parameters
-                                }
+                            settings.oopCalibration = oopCalibration.parameters
+                            if app.calibration == .empty || (app.calibration != settings.calibration) {
+                                app.calibration = oopCalibration.parameters
                             }
                         }
                     } else {
@@ -516,9 +512,7 @@ extension MainDelegate {
                 log("OOP: history response: \(data.string)")
                 if data.string.contains("errcode") {
                     errorStatus("OOP history error: \(data.string)")
-                    DispatchQueue.main.async {
-                        self.history.values = []
-                    }
+                    history.values = []
                 } else {
                     var oopData: GlucoseSpaceHistoryResponse?
                     if !session.isEmpty {
@@ -526,11 +520,9 @@ extension MainDelegate {
                         oopData = oopResponse?.data
                         // TODO: verify calibration parameters
                         if let oopCalibration = oopResponse?.slope {
-                            DispatchQueue.main.async {
-                                self.settings.oopCalibration = oopCalibration
-                                if self.app.calibration == .empty || (self.app.calibration != self.settings.calibration) {
-                                    self.app.calibration = oopCalibration
-                                }
+                            settings.oopCalibration = oopCalibration
+                            if app.calibration == .empty || (app.calibration != settings.calibration) {
+                                app.calibration = oopCalibration
                             }
                         }
                     } else {
@@ -538,14 +530,12 @@ extension MainDelegate {
                     }
                     if let oopData = oopData {
                         let realTimeGlucose = oopData.realTimeGlucose.value
-                        DispatchQueue.main.async {
-                            if realTimeGlucose > 0 {
-                                self.app.oopGlucose = realTimeGlucose
-                            }
-                            self.app.oopAlarm = OOP.Alarm(string: oopData.alarm ?? "")
-                            self.app.oopTrend = OOP.TrendArrow(string: oopData.trendArrow ?? "")
-                            self.app.trendDeltaMinutes = 0
+                        if realTimeGlucose > 0 {
+                            app.oopGlucose = realTimeGlucose
                         }
+                        app.oopAlarm = OOP.Alarm(string: oopData.alarm ?? "")
+                        app.oopTrend = OOP.TrendArrow(string: oopData.trendArrow ?? "")
+                        app.trendDeltaMinutes = 0
                         var oopHistory = oopData.glucoseData(sensorAge: sensor.age, readingDate: app.lastReadingDate)
                         let oopHistoryCount = oopHistory.count
                         if oopHistoryCount > 1 && history.rawValues.count > 0 {
@@ -559,13 +549,9 @@ extension MainDelegate {
                                 oopHistory.append(contentsOf: [Glucose](repeating: Glucose(-1, date: app.lastReadingDate - Double(sensor.age) * 60), count: 32 - oopHistoryCount))
                             }
                             let oopValues = oopHistory
-                            DispatchQueue.main.async {
-                                self.history.values = oopValues
-                            }
+                            history.values = oopValues
                         } else {
-                            DispatchQueue.main.async {
-                                self.history.values = []
-                            }
+                            history.values = []
                         }
                         log("OOP: current glucose: \(realTimeGlucose), history values: \(oopHistory.map{ $0.value })".replacingOccurrences(of: "-1", with: "… "))
                     } else {
@@ -578,9 +564,7 @@ extension MainDelegate {
             }
 
         } catch {
-            DispatchQueue.main.async {
-                self.history.values = []
-            }
+            history.values = []
             log("OOP: connection failed: \(error.localizedDescription)")
             errorStatus("OOP connection failed")
         }
