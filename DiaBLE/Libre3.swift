@@ -31,6 +31,17 @@ class Libre3: Sensor {
     }
 
 
+    enum LifeState: Int {           // SensorLifeState
+        case missing         = 1    // MISSING
+        case warmup          = 2    // WARMUP
+        case ready           = 3    // READY
+        case expired         = 4    // EXPIRED
+        case active          = 5    // ACTIVE
+        case ended           = 6    // ENDED
+        case insertionFailed = 7    // INSERTION_FAILED
+    }
+
+
     // TODO: var members, struct references
 
     // libre3DPCRLInterface
