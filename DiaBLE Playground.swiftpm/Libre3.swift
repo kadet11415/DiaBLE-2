@@ -42,6 +42,19 @@ class Libre3: Sensor {
     }
 
 
+    enum ProductType: Int, CustomStringConvertible {
+        case others = 1
+        case sensor = 4
+
+        var description: String {
+            switch self {
+            case .others: return "OTHERS"
+            case .sensor: return "SENSOR"
+            }
+        }
+    }
+
+
     // TODO: var members, struct references
 
     // libre3DPCRLInterface
@@ -346,6 +359,8 @@ class Libre3: Sensor {
     func parsePatchInfo() {
         if patchInfo.count == 28 {
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
+            let productType = Int(patchInfo[14])  // 04 = SENSOR
+            log("Libre 3: product type: \(ProductType(rawValue: productType)?.description ?? "unknown") (0x\(productType.hex))")
             let wearDuration = patchInfo[8...9]
             maxLife = Int(UInt16(wearDuration))
             // TODO: let warmupTime = patchInfo[10] (0x1E) or patchInfo[11] (0x0F) ?
