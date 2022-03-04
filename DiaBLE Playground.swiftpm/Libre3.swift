@@ -360,15 +360,23 @@ class Libre3: Sensor {
         if patchInfo.count == 28 {
             // TODO: ignore the first two bytes A5 00?
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
+            // TODO: verify
+            let securityVersion = UInt16(patchInfo[2...3])
+            let localization    = UInt16(patchInfo[4...5])
+            let puckGeneration  = UInt16(patchInfo[6...7])
+            log("Libre 3: security version: \(securityVersion) (0x\(securityVersion.hex)), localization: \(localization) (0x\(localization.hex)), puck generation: \(puckGeneration) (0x\(puckGeneration.hex))")
             let wearDuration = patchInfo[8...9]
             maxLife = Int(UInt16(wearDuration))
             log("Libre 3: wear duration: \(maxLife) minutes (\(maxLife.formattedInterval), 0x\(maxLife.hex))")
-            let fwVersion = patchInfo.subdata(in: 10 ..< 13)
+            let fwVersion = patchInfo.subdata(in: 10 ..< 14)
             log("Libre 3: firmware version: \(fwVersion[3]).\(fwVersion[2]).\(fwVersion[1]).\(fwVersion[0])")
             let productType = Int(patchInfo[14])  // 04 = SENSOR
             log("Libre 3: product type: \(ProductType(rawValue: productType)?.description ?? "unknown") (0x\(productType.hex))")
             // state 04 (.paired) detected already after 15 minutes, 08 for a detached sensor (ERROR_TERMINATED)
             // 05 (.expired) lasts more than further 12 hours, almost 24, before BLE shutdown (06 = .terminated)
+            // TODO: verify
+            let warmupTime = patchInfo[15]
+            log("Libre 3: warmup time: \(warmupTime * 5) minutes (0x\(warmupTime.hex))")
             let sensorState = patchInfo[16]
             // TODO: manage specific Libre 3 states
             state = SensorState(rawValue: sensorState <= 2 ? sensorState: sensorState - 1) ?? .unknown
