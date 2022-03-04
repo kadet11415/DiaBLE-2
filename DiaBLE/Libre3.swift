@@ -358,13 +358,15 @@ class Libre3: Sensor {
 
     func parsePatchInfo() {
         if patchInfo.count == 28 {
+            // TODO: ignore the first two bytes A5 00?
             log("Libre 3: patch info: \(patchInfo.hexBytes), CRC: \(Data(patchInfo.suffix(2).reversed()).hex), computed CRC: \(patchInfo[2...25].crc16.hex)")
-            let productType = Int(patchInfo[14])  // 04 = SENSOR
-            log("Libre 3: product type: \(ProductType(rawValue: productType)?.description ?? "unknown") (0x\(productType.hex))")
             let wearDuration = patchInfo[8...9]
             maxLife = Int(UInt16(wearDuration))
-            // TODO: let warmupTime = patchInfo[10] (0x1E) or patchInfo[11] (0x0F) ?
             log("Libre 3: wear duration: \(maxLife) minutes (\(maxLife.formattedInterval), 0x\(maxLife.hex))")
+            let fwVersion = patchInfo.subdata(in: 10 ..< 14)
+            log("Libre 3: firmware version: \(fwVersion[3]).\(fwVersion[2]).\(fwVersion[1]).\(fwVersion[0])")
+            let productType = Int(patchInfo[14])  // 04 = SENSOR
+            log("Libre 3: product type: \(ProductType(rawValue: productType)?.description ?? "unknown") (0x\(productType.hex))")
             // state 04 (.paired) detected already after 15 minutes, 08 for a detached sensor (ERROR_TERMINATED)
             // 05 (.expired) lasts more than further 12 hours, almost 24, before BLE shutdown (06 = .terminated)
             let sensorState = patchInfo[16]
