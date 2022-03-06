@@ -121,7 +121,7 @@ class MiaoMiao: Transmitter {
                     main.settings.activeSensorSerial = sensor!.serial
                     log("\(name): patch info: \(sensor!.patchInfo.hex), sensor type: \(sensor!.type.rawValue), serial number: \(sensor!.serial)")
                     if sensor != nil && sensor!.type == .libreProH {
-                        let libreProSensor = Sensor(transmitter: self)
+                        let libreProSensor = LibrePro(transmitter: self)
                         libreProSensor.age = sensor!.age
                         libreProSensor.uid = sensor!.uid
                         libreProSensor.patchInfo = sensor!.patchInfo
