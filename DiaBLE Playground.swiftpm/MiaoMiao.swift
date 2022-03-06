@@ -120,6 +120,15 @@ class MiaoMiao: Transmitter {
                     main.settings.patchInfo = sensor!.patchInfo
                     main.settings.activeSensorSerial = sensor!.serial
                     log("\(name): patch info: \(sensor!.patchInfo.hex), sensor type: \(sensor!.type.rawValue), serial number: \(sensor!.serial)")
+                    if sensor != nil && sensor!.type == .libreProH {
+                        let libreProSensor = Sensor(transmitter: self)
+                        libreProSensor.age = sensor!.age
+                        libreProSensor.uid = sensor!.uid
+                        libreProSensor.patchInfo = sensor!.patchInfo
+                        libreProSensor.lastReadingDate = sensor!.lastReadingDate
+                        sensor = libreProSensor
+                        main.app.sensor = sensor
+                    }
                 } else {
                     // https://github.com/dabear/LibreOOPAlgorithm/blob/master/app/src/main/java/com/hg4/oopalgorithm/oopalgorithm/AlgorithmRunner.java
                     sensor!.patchInfo = Data([0xDF, 0x00, 0x00, 0x01, 0x01, 0x02])
