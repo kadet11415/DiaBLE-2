@@ -42,7 +42,7 @@ import Foundation
 //
 // 0xD998 ..< 0xF918: history data (6 * 4 * 24 * 14 bytes)
 //
-// 0xFFB8 ..< 0xFFD0: AB AB patch table for the 9 custom commands A0 A1 A2 A4 A3 ?? E0 E1 E2
+// 0xFFA8 ..< 0xFFD0: AB AB patch table for the 9 custom commands A0 A1 A2 A4 A3 ?? E0 E1 E2
 
 
 
@@ -57,7 +57,7 @@ class LibrePro: Sensor {
         let blockCount = min(((historyIndex - 1) * 6) / 8, offset == 0 ? 24 : 25)
         var historyData = Data(fram[176...])
 
-        log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock), offset: \(offset), blockCount: \(blockCount), history range: \(offset)...\(offset + blockCount * 8)")
+        log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock), offset: \(offset), blockCount: \(blockCount), history range: \(offset)..<\(offset + blockCount * 8)")
 
         do {
             (_, historyData) = try await nfc.readBlocks(from: 22 + startBlock, count: blockCount)
@@ -71,6 +71,7 @@ class LibrePro: Sensor {
         let measurements = (historyData.count - offset) / 6
         let history = Data(historyData[offset..<(offset + measurements * 6)])
         log(history.hexDump(header: "\(type) \(serial): \(measurements) 6-byte measurements:", startBlock: startBlock))
+        // TODO: update sensor.history
     }
 #endif    // #if !os(watchOS)
 
@@ -223,7 +224,7 @@ class LibrePro: Sensor {
         //        }
 
         if fram.count >= 72 {
-            log("Sensor region: \(region.description) (\(fram[43].hex))")
+            log("Sensor region: \(region.description) (0x\(fram[43].hex))")
         }
 
         if maxLife > 0 {

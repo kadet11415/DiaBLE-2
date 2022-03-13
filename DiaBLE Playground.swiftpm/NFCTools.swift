@@ -42,10 +42,16 @@ extension NFC {
                 log(data.hexDump(header: "Patch table for A0-A4 E0-E2 commands:", address: address))
                 (address, data) = try await readRaw(0xF860, 43 * 8 + (sensor.type == .libre1 ? 201 * 8 : 0))
                 log(data.hexDump(header: "FRAM:", address: address))
+                if sensor.type == .libreProH {
+                    (address, data) = try await readRaw(0xFFA8, 40)
+                    log(data.hexDump(header: "Patch table for A0-A4 ?? E0-E2 commands:", address: address))
+                    (address, data) = try await readRaw(0xD998, 43 * 8)
+                    log(data.hexDump(header: "FRAM history (first 43 blocks):", address: address))
+                }
             } catch {}
 
             do {
-                let (start, data) = try await read(fromBlock: 0, count: 43 + (sensor.type == .libre1 ? 201 : 0))
+                let (start, data) = try await read(fromBlock: 0, count: 43 + (sensor.type == .libre1 || sensor.type == .libreProH ? 201 : 0))
                 log(data.hexDump(header: "ISO 15693 FRAM blocks:", startBlock: start))
                 sensor.fram = Data(data)
                 if sensor.encryptedFram.count > 0 && sensor.fram.count >= 344 {

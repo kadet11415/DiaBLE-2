@@ -629,11 +629,11 @@ class NFC: NSObject, NFCTagReaderSessionDelegate, Logging {
     }
 
 
-    // MARK: - Libre 1 only
+    // MARK: - Libre 1 and Pro only
 
     func readRaw(_ address: Int, _ bytes: Int) async throws -> (Int, Data) {
 
-        if sensor.type != .libre1 {
+        if sensor.type != .libre1 && sensor.type != .libreProH {
             debugLog("readRaw() A3 command not supported by \(sensor.type)")
             throw NFCError.commandNotSupported
         }
