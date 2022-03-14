@@ -45,8 +45,10 @@ extension NFC {
                 if sensor.type == .libreProH {
                     (address, data) = try await readRaw(0xFFA8, 40)
                     log(data.hexDump(header: "Patch table for A0-A4 ?? E0-E2 commands:", address: address))
-                    (address, data) = try await readRaw(0xD998, 43 * 8)
-                    log(data.hexDump(header: "FRAM history (first 43 blocks):", address: address))
+                    (address, data) = try await readRaw(0xD8E0, 22 * 8)
+                    log(data.hexDump(header: "FRAM (first 22 blocks):", address: address))
+                    (address, data) = try await readRaw(0xD998, 16 * 8)
+                    log(data.hexDump(header: "FRAM history (first 16 blocks):", address: address))
                 }
             } catch {}
 

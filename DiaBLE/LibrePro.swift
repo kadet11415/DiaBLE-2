@@ -38,6 +38,7 @@ import Foundation
 // config: 0x1A00, 64
 // sram:   0x1C00, 4096
 //
+// 0xD8E0: 40-byte header + 32-byte footer + 104-byte body
 // 0xD8F8: 14-char reader serial + 2 bytes to append to the activation command
 //
 // 0xD998 ..< 0xF918: history data (6 * 4 * 24 * 14 bytes)
