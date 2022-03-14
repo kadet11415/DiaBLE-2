@@ -163,7 +163,7 @@ public class MainDelegate: NSObject, WKExtendedRuntimeSessionDelegate {
 
         sensor.detailFRAM()
 
-        if sensor.history.count > 0 && sensor.fram.count >= 344 {
+        if sensor.history.count > 0 || sensor.trend.count > 0 {
 
             let calibrationInfo = sensor.calibrationInfo
             if sensor.serial == settings.activeSensorSerial {
