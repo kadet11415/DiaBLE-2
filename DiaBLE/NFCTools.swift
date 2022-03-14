@@ -38,17 +38,19 @@ extension NFC {
                 log(data.hexDump(header: "Config RAM (patch UID at 0x1A08):", address: address))
                 (address, data) = try await readRaw(0x1C00, 512)
                 log(data.hexDump(header: "SRAM:", address: address))
-                (address, data) = try await readRaw(0xFFAC, 36)
-                log(data.hexDump(header: "Patch table for A0-A4 E0-E2 commands:", address: address))
-                (address, data) = try await readRaw(0xF860, 43 * 8 + (sensor.type == .libre1 ? 201 * 8 : 0))
-                log(data.hexDump(header: "FRAM:", address: address))
+                if sensor.type == .libre1 {
+                    (address, data) = try await readRaw(0xFFAC, 36)
+                    log(data.hexDump(header: "Patch table for A0-A4 E0-E2 commands:", address: address))
+                    (address, data) = try await readRaw(0xF860, 244 * 8)
+                    log(data.hexDump(header: "FRAM:", address: address))
+                }
                 if sensor.type == .libreProH {
                     (address, data) = try await readRaw(0xFFA8, 40)
                     log(data.hexDump(header: "Patch table for A0-A4 ?? E0-E2 commands:", address: address))
                     (address, data) = try await readRaw(0xD8E0, 22 * 8)
                     log(data.hexDump(header: "FRAM (first 22 blocks):", address: address))
-                    (address, data) = try await readRaw(0xD998, 16 * 8)
-                    log(data.hexDump(header: "FRAM history (first 16 blocks):", address: address))
+                    (address, data) = try await readRaw(0xD998, 24 * 8)
+                    log(data.hexDump(header: "FRAM history (first 24 blocks):", address: address))
                 }
             } catch {}
 
