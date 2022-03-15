@@ -624,6 +624,16 @@ class Libre3: Sensor {
     static let MAX_SERIAL_NUMBER_SIZE = 0xf
 
 
+    // Trident MSLibre3ActivationResponse
+    static let LIBRE3_ACTIVATION_ERROR_INCOMPATIBLE     = 1
+    static let LIBRE3_ACTIVATION_ERROR_TERMINATED       = 2
+    static let LIBRE3_ACTIVATION_ERROR_SCAN_ERROR       = 3
+    static let LIBRE3_ACTIVATION_ERROR_SENSOR_ERROR     = 4
+    static let LIBRE3_ACTIVATION_ERROR_NOT_YOURS        = 5
+    static let LIBRE3_ACTIVATION_ERROR_INSERTION_FAILED = 6
+    static let LIBRE3_ACTIVATION_ERROR_SENSOR_EXPIRED   = 7
+
+
     // Trident ISecurityContext
     static let IV_ENC_SIZE = 8
     static let MODE_DECRYPT = 2
