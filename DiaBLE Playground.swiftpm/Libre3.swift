@@ -120,10 +120,15 @@ class Libre3: Sensor {
     }
 
 
+    // - The payload to append to `A8` to activate a sensor (CMD_SWITCH_RECEIVER)
+    //   is computed basing on the activation time and on the `receiverID`
+    //   (NFC_ACTIVATION_COMMAND_PAYLOAD_SIZE: 10 bytes)
+    // - The 18-byte reply starts with the dummy bytes `A5 00` and ends in a CRC16
+
     struct ActivationResponse {
-        let bdAddress: Data
-        let BLE_Pin: Data
-        let activationTime: Int
+        let bdAddress: Data      // 6 bytes
+        let BLE_Pin: Data        // 4 bytes
+        let activationTime: Int  // 4 bytes
     }
 
 
