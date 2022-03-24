@@ -101,7 +101,10 @@ class MiaoMiao: Transmitter {
             }
             buffer.append(data)
             log("\(name): partial buffer size: \(buffer.count)")
-            if buffer.count >= 363 {
+
+            var framBlocks = 43
+
+            if buffer.count >= 363 {  // 18 + framBlocks * 8 + 1
                 log("\(name): data size: \(Int(buffer[1]) << 8 + Int(buffer[2]))")
 
                 battery = Int(buffer[13])
@@ -115,11 +118,13 @@ class MiaoMiao: Transmitter {
                 main.settings.patchUid = sensorUid
                 log("\(name): sensor age: \(sensor!.age) minutes (\(String(format: "%.1f", Double(sensor!.age)/60/24)) days), patch uid: \(sensor!.uid.hex)")
 
-                if buffer.count >= 369 {
+
+                if buffer.count >= 369 {  // 18 + 43 * 8 + 1 + 6
                     sensor!.patchInfo = Data(buffer[363...368])
                     main.settings.patchInfo = sensor!.patchInfo
                     main.settings.activeSensorSerial = sensor!.serial
                     log("\(name): patch info: \(sensor!.patchInfo.hex), sensor type: \(sensor!.type.rawValue), serial number: \(sensor!.serial)")
+
                     if sensor != nil && sensor!.type == .libreProH {
                         let libreProSensor = LibrePro(transmitter: self)
                         libreProSensor.age = sensor!.age
@@ -128,13 +133,15 @@ class MiaoMiao: Transmitter {
                         libreProSensor.lastReadingDate = sensor!.lastReadingDate
                         sensor = libreProSensor
                         main.app.sensor = sensor
+                        framBlocks = 22
+                        // TODO: manage also the 21 partial historic blocks (28 measurements)
                     }
                 } else {
                     // https://github.com/dabear/LibreOOPAlgorithm/blob/master/app/src/main/java/com/hg4/oopalgorithm/oopalgorithm/AlgorithmRunner.java
                     sensor!.patchInfo = Data([0xDF, 0x00, 0x00, 0x01, 0x01, 0x02])
                 }
-                sensor!.fram = Data(buffer[18 ..< 18 + 22 * 8])
-                // TODO: sensor!.fram = Data(buffer[18 ..< 362])
+                sensor!.fram = Data(buffer[18 ..< 18 + framBlocks * 8])
+
                 main.status("\(sensor!.type)  +  \(name)")
             }
         }
