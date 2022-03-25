@@ -42,6 +42,21 @@ class Libre3: Sensor {
     }
 
 
+    enum Condition: Int, CustomStringConvertible {   // SensorCondition
+        case ok      = 0    // LIBRE3_SENSOR_CONDITION_OK        - OK
+        case invalid = 1    // LIBRE3_SENSOR_CONDITION_INVALID   - INVALID
+        case esa     = 2    // LIBRE3_SENSOR_CONDITION_ESA_CHECK - ESA
+
+        var description: String {
+            switch self {
+            case .ok:      return "OK"
+            case .invalid: return "invalid"
+            case .esa:     return "ESA"
+            }
+        }
+    }
+
+
     enum ProductType: Int, CustomStringConvertible {
         case others = 1
         case sensor = 4
@@ -97,14 +112,14 @@ class Libre3: Sensor {
         let projectedGlucose: UInt16
         let historicalReadingDQError: UInt16
         let rateOfChange: UInt16
-        let trend: Int
+        let trend: OOP.TrendArrow
         let esaDuration: UInt16
         let temperatureStatus: Int
         let actionableStatus: Int
         let glycemicAlarmStatus: Int
         let glucoseRangeStatus: Int
         let resultRangeStatus: Int
-        let sensorCondition: Int
+        let sensorCondition: Condition
         let uncappedCurrentMgDl: Int
         let uncappedHistoricMgDl: Int
         let temperature: Int
@@ -577,9 +592,6 @@ class Libre3: Sensor {
     static let LIBRE3_DQERROR_SENSOR_TOO_HOT  = 0xA000  // 40960
     static let LIBRE3_DQERROR_SENSOR_TOO_COLD = 0xC000  // 49152
     static let LIBRE3_DQERROR_OUTLIER_FILTER_DELTA = 2
-    static let LIBRE3_SENSOR_CONDITION_OK = 0
-    static let LIBRE3_SENSOR_CONDITION_INVALID = 1
-    static let LIBRE3_SENSOR_CONDITION_ESA_CHECK = 2
 
 
     // Libre3.libre3DPCRLInterface
