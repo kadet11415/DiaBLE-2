@@ -70,6 +70,21 @@ class Libre3: Sensor {
     }
 
 
+    enum ResultRange: Int, CustomStringConvertible {
+        case `in`  = 0    // IN_RANGE
+        case below = 1    // BELOW_RANGE
+        case above = 2    // ABOVE_RANGE
+
+        var description: String {
+            switch self {
+            case .in:    return "in range"
+            case .below: return "below range"
+            case .above: return "above range"
+            }
+        }
+    }
+
+
     // TODO: var members, struct references
 
     // libre3DPCRLInterface
@@ -116,9 +131,9 @@ class Libre3: Sensor {
         let esaDuration: UInt16
         let temperatureStatus: Int
         let actionableStatus: Int
-        let glycemicAlarmStatus: Int
-        let glucoseRangeStatus: Int
-        let resultRangeStatus: Int
+        let glycemicAlarmStatus: OOP.Alarm
+        let glucoseRangeStatus: ResultRange
+        let resultRangeStatus: ResultRange
         let sensorCondition: Condition
         let uncappedCurrentMgDl: Int
         let uncappedHistoricMgDl: Int
