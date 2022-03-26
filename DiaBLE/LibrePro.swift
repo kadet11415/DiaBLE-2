@@ -53,12 +53,13 @@ class LibrePro: Sensor {
 #if !os(watchOS)
     func scanHistory(nfc: NFC) async throws {
         let historyIndex = Int(fram[78]) + Int(fram[79]) << 8
-        var startBlock = ((historyIndex - 1) * 6) / 8
+        // always set to 0 the start block for the first 8-hour 32 measurements (24 blocks)
+        var startBlock = max(((historyIndex - 1) * 6) / 8 - 23, 0)
         var offset = ((historyIndex - 1) * 6) % 8
         let blockCount = min(offset == 0 ? 24 : 25, startBlock + 1 + (offset < 4 ? 0 : 1))
-        var historyData = Data(fram[176...])
+        var historyData = Data(fram[(22 * 8)...])
 
-        log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock), offset: \(offset), blockCount: \(blockCount), history range: \(offset)..<\(offset + blockCount * 8)")
+        log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock) (#\(startBlock.hex)), offset: \(offset), blockCount: \(blockCount), history range: \(offset)..<\(offset + blockCount * 8)")
 
         do {
             if !nfc.isAvailable { throw NFCError.read }
@@ -73,7 +74,14 @@ class LibrePro: Sensor {
         let measurements = (historyData.count - offset) / 6
         let history = Data(historyData[offset ..< (offset + measurements * 6)])
         log(history.hexDump(header: "\(type) \(serial): \(measurements) 6-byte measurements:", startBlock: startBlock))
+        let blankFRAM = Data(count: 22 * 8 + historyIndex * 6 - history.count - fram.count)
+        fram = fram + blankFRAM + history
+
         // TODO: update sensor.history
+        DispatchQueue.main.async {
+            self.main.history.rawTrend  = self.trend
+            self.main.history.rawValues = self.history
+        }
     }
 #endif    // #if !os(watchOS)
 
@@ -144,7 +152,7 @@ class LibrePro: Sensor {
             let j = historyIndex - 1 - i
             var offset = 176 + j * 6
 
-            if fram.count < offset + 6 + 1 {
+            if fram.count < offset + 6 {
                 // test the first history blocks which were scanned anyway
                 let scanned = (fram.count - 176) / 6
                 offset = 176 + (scanned - 1 - i) * 6
