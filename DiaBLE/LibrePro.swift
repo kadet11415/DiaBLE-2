@@ -61,6 +61,7 @@ class LibrePro: Sensor {
         log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock), offset: \(offset), blockCount: \(blockCount), history range: \(offset)..<\(offset + blockCount * 8)")
 
         do {
+            if !nfc.isAvailable { throw NFCError.read }
             (_, historyData) = try await nfc.readBlocks(from: 22 + startBlock, count: blockCount)
             log(historyData.hexDump(header: "NFC: did read \(historyData.count / 8) FRAM blocks:", startBlock: startBlock))
         } catch {
