@@ -53,9 +53,9 @@ class LibrePro: Sensor {
 #if !os(watchOS)
     func scanHistory(nfc: NFC) async throws {
         let historyIndex = Int(fram[78]) + Int(fram[79]) << 8
-        var startBlock = max(((historyIndex - 1) * 6) / 8 - 23, 0)
-        var offset = (8 - ((historyIndex - 1) * 6) % 8) % 8
-        let blockCount = min(((historyIndex - 1) * 6) / 8, offset == 0 ? 24 : 25)
+        var startBlock = ((historyIndex - 1) * 6) / 8
+        var offset = ((historyIndex - 1) * 6) % 8
+        let blockCount = min(offset == 0 ? 24 : 25, startBlock + 1 + (offset < 4 ? 0 : 1))
         var historyData = Data(fram[176...])
 
         log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock), offset: \(offset), blockCount: \(blockCount), history range: \(offset)..<\(offset + blockCount * 8)")
@@ -70,7 +70,7 @@ class LibrePro: Sensor {
         }
 
         let measurements = (historyData.count - offset) / 6
-        let history = Data(historyData[offset..<(offset + measurements * 6)])
+        let history = Data(historyData[offset ..< (offset + measurements * 6)])
         log(history.hexDump(header: "\(type) \(serial): \(measurements) 6-byte measurements:", startBlock: startBlock))
         // TODO: update sensor.history
     }
@@ -143,7 +143,7 @@ class LibrePro: Sensor {
             let j = historyIndex - 1 - i
             var offset = 176 + j * 6
 
-            if fram.count < offset + 6 {
+            if fram.count < offset + 6 + 1 {
                 // test the first history blocks which were scanned anyway
                 let scanned = (fram.count - 176) / 6
                 offset = 176 + (scanned - 1 - i) * 6
