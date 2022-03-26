@@ -74,8 +74,12 @@ class LibrePro: Sensor {
         let measurements = (historyData.count - offset) / 6
         let history = Data(historyData[offset ..< (offset + measurements * 6)])
         log(history.hexDump(header: "\(type) \(serial): \(measurements) 6-byte measurements:", startBlock: startBlock))
-        let blankFRAM = Data(count: 22 * 8 + historyIndex * 6 - history.count - fram.count)
-        fram = fram + blankFRAM + history
+
+        let historyGap = 22 * 8 + historyIndex * 6 - history.count - fram.count
+        if historyGap > 0 {
+            let blankFRAM = Data(count: historyGap)
+            fram = fram + blankFRAM + history
+        }
 
         // TODO: update sensor.history
         DispatchQueue.main.async {
