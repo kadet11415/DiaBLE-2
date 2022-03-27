@@ -133,8 +133,10 @@ class MiaoMiao: Transmitter {
                         libreProSensor.lastReadingDate = sensor!.lastReadingDate
                         sensor = libreProSensor
                         main.app.sensor = sensor
-                        framBlocks = 22
-                        // TODO: manage also the 21 partial historic blocks (28 measurements)
+
+                        // TODO: manage the 21 partial historic blocks (28 measurements)
+                        framBlocks = 43 // 22
+
                     }
                 } else {
                     // https://github.com/dabear/LibreOOPAlgorithm/blob/master/app/src/main/java/com/hg4/oopalgorithm/oopalgorithm/AlgorithmRunner.java
