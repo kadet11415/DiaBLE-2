@@ -127,6 +127,7 @@ class MiaoMiao: Transmitter {
 
                     if sensor != nil && sensor!.type == .libreProH {
                         let libreProSensor = LibrePro(transmitter: self)
+                        // FIXME: buffer[3...4] doesn't match the real sensor age in body[2...3]
                         libreProSensor.age = sensor!.age
                         libreProSensor.uid = sensor!.uid
                         libreProSensor.patchInfo = sensor!.patchInfo
