@@ -51,7 +51,7 @@ class LibrePro: Sensor {
 
 
 #if !os(watchOS)
-    func scanHistory(nfc: NFC) async throws {
+    func scanHistory(nfc: NFC, fram: Data) async throws -> Data {
         let historyIndex = Int(fram[78]) + Int(fram[79]) << 8
         // always set to 0 the start block for the first 8-hour 32 measurements (24 blocks)
         var startBlock = max(((historyIndex - 1) * 6) / 8 - 23, 0)
@@ -76,16 +76,14 @@ class LibrePro: Sensor {
         log(history.hexDump(header: "\(type) \(serial): \(measurements) 6-byte measurements:", startBlock: startBlock))
 
         let historyGap = 22 * 8 + historyIndex * 6 - history.count - fram.count
-        if historyGap > 0 {
-            let blankFRAM = Data(count: historyGap)
-            fram = fram + blankFRAM + history
-        }
+        let blankFRAM = historyGap > 0 ? Data(count: historyGap) : Data()
 
-        // TODO: update sensor.history
         DispatchQueue.main.async {
             self.main.history.rawTrend  = self.trend
             self.main.history.rawValues = self.history
         }
+
+        return fram + blankFRAM + history
     }
 #endif    // #if !os(watchOS)
 
