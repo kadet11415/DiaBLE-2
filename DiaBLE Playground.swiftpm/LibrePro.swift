@@ -278,8 +278,6 @@ class LibrePro: Sensor {
     }
 
 
-    // https://github.com/gui-dos/DiaBLE/discussions/2 - "Question about Libre Pro"
-
     static func test(main: MainDelegate) -> Sensor {
 
         let sensor = LibrePro(main: main)
