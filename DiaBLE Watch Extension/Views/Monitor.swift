@@ -46,6 +46,9 @@ struct Monitor: View {
 
                     Text(app.currentGlucose > 0 ? "\(app.currentGlucose.units)" : "---")
                         .font(.system(size: 26, weight: .black)).monospacedDigit()
+                    // avoid truncation in 40 mm models (https://github.com/gui-dos/DiaBLE/issues/16)
+                        .scaledToFill()
+                        .minimumScaleFactor(0.85)
                         .foregroundColor(.black)
                         .padding(.vertical, 0).padding(.horizontal, 4)
                         .background(app.currentGlucose > 0 && (app.currentGlucose > Int(settings.alarmHigh) || app.currentGlucose < Int(settings.alarmLow)) ?
