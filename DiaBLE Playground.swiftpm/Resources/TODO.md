@@ -14,6 +14,9 @@ FIXME
   - missing entitlements for HealthKit, NFC and Bluetooth background mode
 * Mac Catalyst:
   - log bogging down too early
+* Libre Pro / MiaoMiao:
+  - `buffer[3...4]` doesn't match the real sensor age in `body[2...3]`
+  - the appended 21 historic blocks aren't dated properly
 * @Published classes nonsense
 * the new Libre2() subclass is not instantiated specifically in Transmitters
 * `@AppStorage(selectedTab)` prevents managing the "More..." fifth tab item

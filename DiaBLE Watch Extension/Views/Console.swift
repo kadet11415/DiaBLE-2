@@ -109,6 +109,7 @@ struct Console: View {
                     }
                     .font(Font.footnote.monospacedDigit()).foregroundColor(.orange)
                     .frame(width: 24, height: 24)
+                    .allowsTightening(true)
                     .fixedSize()
                     .onReceive(timer) { _ in
                         // workaround: watchOS fails converting the interval to an Int32

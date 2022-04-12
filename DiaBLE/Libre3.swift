@@ -42,6 +42,21 @@ class Libre3: Sensor {
     }
 
 
+    enum Condition: Int, CustomStringConvertible {   // SensorCondition
+        case ok      = 0    // LIBRE3_SENSOR_CONDITION_OK        - OK
+        case invalid = 1    // LIBRE3_SENSOR_CONDITION_INVALID   - INVALID
+        case esa     = 2    // LIBRE3_SENSOR_CONDITION_ESA_CHECK - ESA
+
+        var description: String {
+            switch self {
+            case .ok:      return "OK"
+            case .invalid: return "invalid"
+            case .esa:     return "ESA"
+            }
+        }
+    }
+
+
     enum ProductType: Int, CustomStringConvertible {
         case others = 1
         case sensor = 4
@@ -50,6 +65,21 @@ class Libre3: Sensor {
             switch self {
             case .others: return "OTHERS"
             case .sensor: return "SENSOR"
+            }
+        }
+    }
+
+
+    enum ResultRange: Int, CustomStringConvertible {
+        case `in`  = 0    // IN_RANGE
+        case below = 1    // BELOW_RANGE
+        case above = 2    // ABOVE_RANGE
+
+        var description: String {
+            switch self {
+            case .in:    return "in range"
+            case .below: return "below range"
+            case .above: return "above range"
             }
         }
     }
@@ -97,14 +127,14 @@ class Libre3: Sensor {
         let projectedGlucose: UInt16
         let historicalReadingDQError: UInt16
         let rateOfChange: UInt16
-        let trend: Int
+        let trend: OOP.TrendArrow
         let esaDuration: UInt16
         let temperatureStatus: Int
         let actionableStatus: Int
-        let glycemicAlarmStatus: Int
-        let glucoseRangeStatus: Int
-        let resultRangeStatus: Int
-        let sensorCondition: Int
+        let glycemicAlarmStatus: OOP.Alarm
+        let glucoseRangeStatus: ResultRange
+        let resultRangeStatus: ResultRange
+        let sensorCondition: Condition
         let uncappedCurrentMgDl: Int
         let uncappedHistoricMgDl: Int
         let temperature: Int
@@ -184,9 +214,10 @@ class Libre3: Sensor {
 
         /// Notifies a first stream of historic data
         /// Very probably 6 readings of 3 bytes are encoded in each packet (12 readings per hour)
+        /// (`ABT_HISTORICAL_POINTS_PER_NOTIFICATION` = 6)
         case historicalData = "0898195A-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
-        /// Notifies a second longer stream of clinical data
+        /// Notifies a second longer stream of clinical data (max 128 packets when reconnecting aftert some hours)
         case clinicalData = "08981AB8-EF89-11E9-81B4-2A2AE2DBCCE4"  // ["Notify"]
 
         /// Notifies 20 + 20 bytes towards the end of activation
@@ -576,9 +607,6 @@ class Libre3: Sensor {
     static let LIBRE3_DQERROR_SENSOR_TOO_HOT  = 0xA000  // 40960
     static let LIBRE3_DQERROR_SENSOR_TOO_COLD = 0xC000  // 49152
     static let LIBRE3_DQERROR_OUTLIER_FILTER_DELTA = 2
-    static let LIBRE3_SENSOR_CONDITION_OK = 0
-    static let LIBRE3_SENSOR_CONDITION_INVALID = 1
-    static let LIBRE3_SENSOR_CONDITION_ESA_CHECK = 2
 
 
     // Libre3.libre3DPCRLInterface

@@ -309,7 +309,7 @@ class Sensor: ObservableObject, Logging {
         // FRAM is updated with a 3 minutes delay:
         // https://github.com/UPetersen/LibreMonitor/blob/Swift4/LibreMonitor/Model/SensorData.swift
 
-        let preciseHistoryIndex = ((age - 3) / 15 ) % 32
+        let preciseHistoryIndex = ((age - 3) / 15) % 32
         let delay = (age - 3) % 15 + 3
         var readingDate = lastReadingDate
         if preciseHistoryIndex == historyIndex {

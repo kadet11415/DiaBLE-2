@@ -51,16 +51,18 @@ class LibrePro: Sensor {
 
 
 #if !os(watchOS)
-    func scanHistory(nfc: NFC) async throws {
+    func scanHistory(nfc: NFC, fram: Data) async throws -> Data {
         let historyIndex = Int(fram[78]) + Int(fram[79]) << 8
+        // always set to 0 the start block for the first 8-hour 32 measurements (24 blocks)
         var startBlock = max(((historyIndex - 1) * 6) / 8 - 23, 0)
-        var offset = (8 - ((historyIndex - 1) * 6) % 8) % 8
-        let blockCount = min(((historyIndex - 1) * 6) / 8, offset == 0 ? 24 : 25)
-        var historyData = Data(fram[176...])
+        var offset = ((historyIndex - 1) * 6) % 8
+        let blockCount = min(offset == 0 ? 24 : 25, startBlock + 1 + (offset < 4 ? 0 : 1))
+        var historyData = Data(fram[(22 * 8)...])
 
-        log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock), offset: \(offset), blockCount: \(blockCount), history range: \(offset)..<\(offset + blockCount * 8)")
+        log("DEBUG: fram: \(fram), historyData: \(historyData), historyIndex: \(historyIndex), startBlock: \(startBlock) (#\(startBlock.hex)), offset: \(offset), blockCount: \(blockCount), history range: \(offset)..<\(offset + blockCount * 8)")
 
         do {
+            if !nfc.isAvailable { throw NFCError.read }
             (_, historyData) = try await nfc.readBlocks(from: 22 + startBlock, count: blockCount)
             log(historyData.hexDump(header: "NFC: did read \(historyData.count / 8) FRAM blocks:", startBlock: startBlock))
         } catch {
@@ -70,9 +72,18 @@ class LibrePro: Sensor {
         }
 
         let measurements = (historyData.count - offset) / 6
-        let history = Data(historyData[offset..<(offset + measurements * 6)])
+        let history = Data(historyData[offset ..< (offset + measurements * 6)])
         log(history.hexDump(header: "\(type) \(serial): \(measurements) 6-byte measurements:", startBlock: startBlock))
-        // TODO: update sensor.history
+
+        let historyGap = 22 * 8 + historyIndex * 6 - history.count - fram.count
+        let blankFRAM = historyGap > 0 ? Data(count: historyGap) : Data()
+
+        DispatchQueue.main.async {
+            self.main.history.rawTrend  = self.trend
+            self.main.history.rawValues = self.history
+        }
+
+        return fram + blankFRAM + history
     }
 #endif    // #if !os(watchOS)
 
@@ -129,7 +140,7 @@ class LibrePro: Sensor {
         // FRAM is updated with a 3 minutes delay:
         // https://github.com/UPetersen/LibreMonitor/blob/Swift4/LibreMonitor/Model/SensorData.swift
 
-        let preciseHistoryIndex = ((age - 3) / 15 ) % 32
+        let preciseHistoryIndex = (age - 3) / 15
         let delay = (age - 3) % 15 + 3
         var readingDate = lastReadingDate
         if preciseHistoryIndex == historyIndex {
@@ -266,8 +277,6 @@ class LibrePro: Sensor {
         }
     }
 
-
-    // https://github.com/gui-dos/DiaBLE/discussions/2 - "Question about Libre Pro"
 
     static func test(main: MainDelegate) -> Sensor {
 
